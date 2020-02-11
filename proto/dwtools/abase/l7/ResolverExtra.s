@@ -886,10 +886,9 @@ errResolvingThrow.defaults =
 
 function resolveQualified_pre( routine, args )
 {
-  let o = args[ 0 ];
-
   if( args.length === 2 )
   args = [ { src : args[ 0 ], selector : args[ 1 ] } ]
+  let o = args[ 0 ];
 
   _.routineOptions( routine, args );
 
