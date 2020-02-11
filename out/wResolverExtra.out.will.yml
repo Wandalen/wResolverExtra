@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - wResolverExtra.out
 consistency:
-  wResolverExtra.out.will.yml: &ref_0
-    hash: c41c2fa14ca37ae824dbe9888ed55c70
-    size: 38571
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 3a4f820f09cddbc1fac15bf7e060afc4
     size: 1889
-  ../.im.will.yml: &ref_2
-    hash: 465fc9df5ec2b155890554f6e67d1d69
-    size: 5011
+  ../.im.will.yml: &ref_1
+    hash: f8bc48411da0ed50ce84a0936ce5b790
+    size: 5021
 module:
   wResolverExtra.out:
     about:
@@ -22,18 +19,18 @@ module:
         inlined special substrings. Use the module to resolve your templates.
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wresolverextra
-      npm.scripts:
+      npm.scripts: &ref_5
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -115,7 +112,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/abase/l7/Resolver.s
+        path: ../proto/dwtools/abase/l7/ResolverExtra.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -125,13 +122,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/Resolver.s'
+        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/Resolver.s'
+        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -702,24 +699,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          reflector: 'reflector::exported.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          reflector: 'reflector::exported.files.proto.export*'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -808,9 +787,8 @@ module:
           content: proto
           export: 1
     consistency:
-      wResolverExtra.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wResolverExtra
@@ -821,20 +799,13 @@ module:
         inlined special substrings. Use the module to resolve your templates.
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 8.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@willbe.so>
+      contributors: *ref_4
       npm.name: wresolverextra
-      npm.scripts:
-        test: wtest .run proto/**
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -914,7 +885,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/abase/l7/Resolver.s
+        path: proto/dwtools/abase/l7/ResolverExtra.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -924,13 +895,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/Resolver.s'
+        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/Resolver.s'
+        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -1508,8 +1479,5 @@ module:
         hash: 3a4f820f09cddbc1fac15bf7e060afc4
         size: 1889
       ../.im.will.yml:
-        hash: 465fc9df5ec2b155890554f6e67d1d69
-        size: 5011
-      wResolverExtra.out.will.yml:
-        hash: c41c2fa14ca37ae824dbe9888ed55c70
-        size: 38571
+        hash: f8bc48411da0ed50ce84a0936ce5b790
+        size: 5021
