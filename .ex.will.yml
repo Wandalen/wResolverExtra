@@ -1,9 +1,8 @@
 
-
 about :
 
   name : 'wResolverExtra'
-  description : '___'
+  description : 'Collection of routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.'
   version : '0.4.0'
   enabled : 1
   interpreters :
@@ -11,7 +10,6 @@ about :
   - chrome >= 60.0.0
   - firefox >= 60.0.0
   keywords :
-  - tools
   - wTools
   license : MIT
   author : 'Kostiantyn Wandalen <wanalen@willbe.so>'
@@ -27,7 +25,7 @@ path :
   repository : git+https:///github.com/Wandalen/wResolverExtra.git
   origins :
    - git+https:///github.com/Wandalen/wResolverExtra.git
-   - npm:///wResolverExtra
+   - npm:///wresolverextra
   bugtracker : https:///github.com/Wandalen/wResolverExtra/issues
 
 step :
@@ -92,4 +90,3 @@ build :
       # - build::npm
       - build::proto.export
       # - build::doc.export
-

@@ -1,16 +1,32 @@
 
-
 submodule :
 
   wTools :
     path : npm:///wTools
     enabled : 0 # submodule
+  wresolver :
+    path : npm:///wresolver
+    enabled : 0 # submodule
+  wresolverextra :
+    path : hd://.
+    enabled : 0 # submodule
+    criterion :
+      development : 1
+  wTesting :
+    path : npm:///wTesting
+    enabled : 0 # submodule
+    criterion :
+      development : 1
 
 path :
 
   in : '.'
   out : 'out'
-  temp : 'path::out'
+  temp :
+    - 'path::out'
+    - 'package-lock.json'
+    - 'package.json'
+    - 'node_modules'
   proto : './proto'
   export : '{path::proto}/**'
   doc : './doc'
@@ -41,16 +57,19 @@ path :
       content : prime
 
   entry.proto.no.tests :
-    path : proto/dwtools/___
+    path : proto/dwtools/abase/l7/Resolver.s
     criterion :
       tests : 'no.tests'
   entry.proto.only.tests :
-    path : proto/**/*.test.*
+    path : proto/**/*.test.s
     criterion :
       tests : 'only.tests'
 
+  # npm.entry : proto/dwtools/abase/Layer2.s
+  # npm.files : proto
+
   entry.out.raw.debug :
-    path : '{path::out.*=1}/source/dwtools/___'
+    path : '{path::out.*=1}/source/dwtools/abase/l7/Resolver.s'
     criterion :
       debug : [ debug, release ]
       raw : raw
@@ -219,4 +238,3 @@ build :
       - build::raw.release
       - build::release
       - build::npm
-
