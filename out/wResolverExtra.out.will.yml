@@ -161,7 +161,7 @@ module:
           - ../proto/dwtools/Tools.s
           - ../proto/dwtools/abase
           - ../proto/dwtools/abase/l7
-          - ../proto/dwtools/abase/l7/ResolverEtra.s
+          - ../proto/dwtools/abase/l7/ResolverExtra.s
           - ../proto/dwtools/abase/l7.test
           - ../proto/dwtools/abase/l7.test/ResolverExtra.test.s
           - ../proto/dwtools/amid
@@ -1510,6 +1510,4 @@ module:
       ../.im.will.yml:
         hash: f8bc48411da0ed50ce84a0936ce5b790
         size: 5021
-      wResolverExtra.out.will.yml:
-        hash: a759f22efdb5fac574f39575c28c1430
-        size: 38594
+      wResolverExtra.out.will.yml: *ref_0
