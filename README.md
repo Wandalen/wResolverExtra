@@ -5,7 +5,7 @@ Collection of routines to resolve complex data structures. It takes a complex da
 
 ## Sample
 
-```
+```js
 var _ = require( 'wresolverextra' );
 var src =
 {
