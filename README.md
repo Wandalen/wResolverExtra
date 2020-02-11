@@ -6,7 +6,9 @@ Collection of routines to resolve complex data structures. It takes a complex da
 ## Sample
 
 ```js
+
 var _ = require( 'wresolverextra' );
+
 var src =
 {
   dir :
@@ -16,17 +18,13 @@ var src =
   val2 : 'here',
 }
 
-let resolved = _.Resolver.resolve
-({
-  src : src,
-  selector : '{::dir/val1} from {::val2}!',
-});
-
+let resolved = _.resolver.resolveQualified( src, '{::dir/val1} from {::val2}!' );
 console.log( resolved );
 
 /*
-`Hello from here!`
+log : `Hello from here!`
 */
+
 ```
 
 ## Try out
