@@ -35,13 +35,15 @@ if( typeof module !== 'undefined' )
   let _ = require( '../../Tools.s' );
   _.include( 'wLooker' );
   _.include( 'wSelector' );
+  _.include( 'wResolver' );
 
 }
 
 let _global = _global_;
 let _ = _global_.wTools;
 let Parent = _.Selector;
-let Self = _.resolver = _.resolver || Object.create( null );
+_.resolver = _.resolver || Object.create( null );
+// let Self = _.resolver = _.resolver || Object.create( null );
 
 // --
 // parser
@@ -426,7 +428,7 @@ function _onSelectorReplicate( o )
 //     });
 //
 //     selector2 = selector2.map( ( split ) => _.arrayIs( split ) ? split.join( '' ) : split );
-//     selector2.composite = _.select.composite;
+//     selector2.composite = _.resolver.composite;
 //
 //     return selector2;
 //   }
@@ -448,6 +450,7 @@ function _onSelectorReplicate( o )
 //
 // let _onSelectorReplicateComposite = onSelectorComposite_functor({ isStrippedSelector : 1 });
 
+// debugger;
 let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite
 ({
   prefix : '{',
@@ -471,7 +474,7 @@ function _onSelectorDown()
 
   // resolver._functionStringsJoinDown.call( it );
 
-  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.select.composite )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver.composite )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -881,7 +884,7 @@ errResolvingThrow.defaults =
 // resolve
 // --
 
-function resolve2_pre( routine, args )
+function resolveQualified_pre( routine, args )
 {
   let o = args[ 0 ];
 
@@ -891,7 +894,7 @@ function resolve2_pre( routine, args )
   o.visited = [];
 
   if( o.Resolver === null )
-  o.Resolver = Self;
+  o.Resolver = _.resolver; /* xxx */
 
   _.assert( arguments.length === 2 );
   _.assert( args.length === 1 );
@@ -905,15 +908,15 @@ function resolve2_pre( routine, args )
 
 //
 
-function resolve2_body( o )
+function resolveQualified_body( o )
 {
   let resolver = this;
 
-  _.assert( !!resolver._resolve2Act );
+  _.assert( !!resolver._resolveQualifiedAct );
   // _.assert( o.prefixlessAction === 'default' || o.defaultResourceKind === null, 'Prefixless action should be "default" if default resource is provided' );
 
   // debugger;
-  let result = resolver._resolve2Act( o );
+  let result = resolver._resolveQualifiedAct( o );
 
   if( result === undefined )
   {
@@ -951,7 +954,7 @@ function resolve2_body( o )
   return it.dst;
 }
 
-resolve2_body.defaults =
+resolveQualified_body.defaults =
 {
 
   src : null,
@@ -974,15 +977,15 @@ resolve2_body.defaults =
 
 }
 
-let resolve2 = _.routineFromPreAndBody( resolve2_pre, resolve2_body );
-let resolve2Maybe = _.routineFromPreAndBody( resolve2_pre, resolve2_body );
+let resolveQualified = _.routineFromPreAndBody( resolveQualified_pre, resolveQualified_body );
+let resolveQualifiedMaybe = _.routineFromPreAndBody( resolveQualified_pre, resolveQualified_body );
 
-var defaults = resolve2Maybe.defaults;
+var defaults = resolveQualifiedMaybe.defaults;
 defaults.missingAction = 'undefine';
 
 //
 
-function _resolve2Act( o )
+function _resolveQualifiedAct( o )
 {
   let resolver = this;
   let result;
@@ -1008,7 +1011,7 @@ function _resolve2Act( o )
     // if( o.selector === "path::out.*=1" )
     // debugger;
 
-    result = _.select
+    result = _.resolve
     ({
 
       src : o.src,
@@ -1045,14 +1048,14 @@ function _resolve2Act( o )
   return result;
 }
 
-var defaults = _resolve2Act.defaults = Object.create( resolve.defaults )
+var defaults = _resolveQualifiedAct.defaults = _.mapExtend( null, resolveQualified.defaults )
 
 // --
 // declare
 // --
 
 let functionSymbol = Symbol.for( 'function' );
-let Extend =
+let ResolverExtension =
 {
 
   name : 'resolver',
@@ -1105,13 +1108,13 @@ let Extend =
 
   // resolve
 
-  resolve2,
-  resolve2Maybe,
-  _resolve2Act,
+  resolveQualified,
+  resolveQualifiedMaybe,
+  _resolveQualifiedAct,
 
 }
 
-_.mapExtend( Self, Extend );
+_.mapExtend( _.resolver, ResolverExtension );
 
 if( typeof module !== 'undefined' && module !== null )
 module[ 'exports' ] = _;

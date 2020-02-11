@@ -216,7 +216,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver.resolve
+  var got = _.resolver.resolveQualified
   ({
     src : src,
     selector : '{::dir/val1} from {::val2}!',
@@ -243,7 +243,7 @@ function qualifiedResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver.resolve
+  var got = _.resolver.resolveQualified
   ({
     src : src,
     selector : '{dir::val1} from {val2::.}!',
@@ -276,7 +276,7 @@ function qualifiedResolve( test )
     },
   }
   var exp = 'user1 - 13 !';
-  var got = _.resolver.resolve
+  var got = _.resolver.resolveQualified
   ({
     src : src,
     selector : '{result::dir/userX} !',

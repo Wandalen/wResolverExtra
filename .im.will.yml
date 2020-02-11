@@ -57,7 +57,7 @@ path :
       content : prime
 
   entry.proto.no.tests :
-    path : proto/dwtools/abase/l7/Resolver.s
+    path : proto/dwtools/abase/l7/ResolverExtra.s
     criterion :
       tests : 'no.tests'
   entry.proto.only.tests :
@@ -69,7 +69,7 @@ path :
   # npm.files : proto
 
   entry.out.raw.debug :
-    path : '{path::out.*=1}/source/dwtools/abase/l7/Resolver.s'
+    path : '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
     criterion :
       debug : [ debug, release ]
       raw : raw
