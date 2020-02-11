@@ -1,5 +1,5 @@
 
-var _ = require( 'wresolver' );
+var _ = require( 'wresolverextra' );
 var src =
 {
   dir :
