@@ -206,6 +206,8 @@ function selectorNormalize( test )
 function trivialResolve( test )
 {
 
+  /* */
+
   test.case = 'trivial';
   var src =
   {
@@ -223,6 +225,24 @@ function trivialResolve( test )
   });
   test.identical( got, exp );
   console.log( got );
+
+  /* */
+
+  test.case = 'implicit';
+  var src =
+  {
+    dir :
+    {
+      val1 : 'Hello'
+    },
+    val2 : 'here',
+  }
+  var exp = 'Hello from here!';
+  var got = _.resolver.resolveQualified( src, '{::dir/val1} from {::val2}!' );
+  test.identical( got, exp );
+  console.log( got );
+
+  /* */
 
 }
 

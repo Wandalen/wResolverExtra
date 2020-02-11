@@ -888,6 +888,9 @@ function resolveQualified_pre( routine, args )
 {
   let o = args[ 0 ];
 
+  if( args.length === 2 )
+  args = [ { src : args[ 0 ], selector : args[ 1 ] } ]
+
   _.routineOptions( routine, args );
 
   if( o.visited === null )
@@ -897,7 +900,7 @@ function resolveQualified_pre( routine, args )
   o.Resolver = _.resolver; /* xxx */
 
   _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 );
+  _.assert( args.length === 1 || args.length === 2 );
   _.assert( _.longHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
   _.assert( _.longHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
   _.assert( _.arrayIs( o.visited ) );
