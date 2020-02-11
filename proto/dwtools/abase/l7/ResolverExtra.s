@@ -332,6 +332,9 @@ function _onSelectorReplicate( o )
   let resolver = rop.Resolver;
   let selector = o.selector;
 
+  // if( _.strIs( it.src ) && _.strHas( it.src, '*::' ) )
+  // debugger;
+
   if( !_.strIs( selector ) )
   return;
 
