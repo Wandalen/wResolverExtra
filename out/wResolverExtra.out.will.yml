@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wResolverExtra.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wResolverExtra.out.will.yml: &ref_0
+    hash: 1e1aed88fb3c804a76010389b2b484d0
+    size: 38595
+  ../.ex.will.yml: &ref_1
     hash: 3a4f820f09cddbc1fac15bf7e060afc4
     size: 1889
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: f8bc48411da0ed50ce84a0936ce5b790
     size: 5021
 module:
@@ -19,18 +22,18 @@ module:
         inlined special substrings. Use the module to resolve your templates.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 8.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wresolverextra
-      npm.scripts: &ref_5
+      npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -699,6 +702,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          reflector: 'reflector::exported.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          reflector: 'reflector::exported.files.proto.export*'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -787,8 +808,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wResolverExtra.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wResolverExtra
@@ -799,13 +821,20 @@ module:
         inlined special substrings. Use the module to resolve your templates.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 8.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@willbe.so>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@willbe.so>
       npm.name: wresolverextra
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: wtest .run proto/**
+        docgen: wdocgen .build proto
     path:
       module.willfiles:
         criterion:
@@ -1481,3 +1510,6 @@ module:
       ../.im.will.yml:
         hash: f8bc48411da0ed50ce84a0936ce5b790
         size: 5021
+      wResolverExtra.out.will.yml:
+        hash: 1e1aed88fb3c804a76010389b2b484d0
+        size: 38595
