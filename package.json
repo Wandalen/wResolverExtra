@@ -1,22 +1,22 @@
 {
-  "name" : "wresolverextra", 
-  "version" : "0.3.69", 
-  "description" : "Collection of routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.", 
-  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>", 
-  "license" : "MIT", 
-  "main" : "proto/dwtools/abase/l7/ResolverExtra.s", 
-  "files" : [ "proto/dwtools/abase/l7", "proto/dwtools/Tools.s" ], 
-  "scripts" : { "test" : "wtest .run proto", "docgen" : "wdocgen proto" }, 
-  "repository" : 
+  "name" : "wresolverextra",
+  "version" : "0.3.70",
+  "description" : "Collection of routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.",
+  "author" : "Kostiantyn Wandalen <wanalen@willbe.so>",
+  "license" : "MIT",
+  "main" : "proto/dwtools/abase/l7/ResolverExtra.s",
+  "files" : [ "proto/dwtools/abase/l7", "proto/dwtools/Tools.s" ],
+  "scripts" : { "test" : "wtest .run proto", "docgen" : "wdocgen proto" },
+  "repository" :
   {
-    "type" : "git", 
+    "type" : "git",
     "url" : "https://github.com/Wandalen/wResolverExtra.git"
-  }, 
-  "bugs" : 
+  },
+  "bugs" :
   {
     "url" : "https://github.com/Wandalen/wResolverExtra/issues"
-  }, 
-  "dependencies" : { "wTools" : "alpha", "wresolver" : "alpha" }, 
-  "devDependencies" : { "wresolverextra" : "file:.", "wTesting" : "alpha" }, 
+  },
+  "dependencies" : { "wTools" : "gamma", "wresolver" : "gamma" },
+  "devDependencies" : { "wresolverextra" : "file:.", "wTesting" : "gamma" },
   "keywords" : [ "wTools" ]
 }
