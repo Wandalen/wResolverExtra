@@ -1121,7 +1121,7 @@ let ResolverExtension =
 
 _.mapExtend( _.resolver, ResolverExtension );
 
-if( typeof module !== 'undefined' && module !== null )
+if( typeof module !== 'undefined' )
 module[ 'exports' ] = _;
 
 })();
