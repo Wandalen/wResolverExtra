@@ -13,7 +13,7 @@
 
 /**
  * Collection of routines to resolve complex data structures.
- * @namespace Tools.ResolverExtra 
+ * @namespace Tools.ResolverExtra
  * @memberof module:Tools/base/resolver
  */
 
