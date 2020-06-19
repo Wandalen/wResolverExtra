@@ -324,16 +324,12 @@ function selectorNormalize( src )
 // iterator methods
 // --
 
-// function _onSelectorReplicate( selector )
 function _onSelectorReplicate( o )
 {
   let it = this;
   let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
   let resolver = rop.Resolver;
   let selector = o.selector;
-
-  // if( _.strIs( it.src ) && _.strHas( it.src, '*::' ) )
-  // debugger;
 
   if( !_.strIs( selector ) )
   return;
@@ -371,89 +367,6 @@ function _onSelectorReplicate( o )
 
 }
 
-//
-
-// function onSelectorComposite_functor( fop )
-// {
-//
-//   fop = _.routineOptions( onSelectorComposite_functor, arguments );
-//   fop.prefix = _.arrayAs( fop.prefix );
-//   fop.postfix = _.arrayAs( fop.postfix );
-//   fop.onSelectorReplicate = fop.onSelectorReplicate || onSelectorReplicate;
-//
-//   _.assert( _.strsAreAll( fop.prefix ) );
-//   _.assert( _.strsAreAll( fop.postfix ) );
-//   _.assert( _.routineIs( fop.onSelectorReplicate ) );
-//
-//   return function onSelectorReplicateComposite( o )
-//   {
-//     let it = this;
-//     let selector = o.selector;
-//
-//     if( !_.strIs( selector ) )
-//     return;
-//
-//     let selector2 = _.strSplitFast
-//     ({
-//       src : selector,
-//       delimeter : _.arrayAppendArrays( [], [ fop.prefix, fop.postfix ] ),
-//     });
-//
-//     if( selector2[ 0 ] === '' )
-//     selector2.splice( 0, 1 );
-//     if( selector2[ selector2.length-1 ] === '' )
-//     selector2.pop();
-//
-//     if( selector2.length < 3 )
-//     {
-//       if( fop.isStrippedSelector )
-//       return fop.onSelectorReplicate.call( it, o );
-//       else
-//       return;
-//     }
-//
-//     if( selector2.length === 3 )
-//     if( _.strsEquivalentAny( fop.prefix, selector2[ 0 ] ) && _.strsEquivalentAny( fop.postfix, selector2[ 2 ] ) )
-//     return fop.onSelectorReplicate.call( it, _.mapExtend( null, o, { selector : selector2[ 1 ] } ) );
-//
-//     selector2 = _.strSplitsCoupledGroup({ splits : selector2, prefix : '{', postfix : '}' });
-//
-//     if( fop.onSelectorReplicate )
-//     selector2 = selector2.map( ( split ) =>
-//     {
-//       if( !_.arrayIs( split ) )
-//       return split;
-//       _.assert( split.length === 3 )
-//       if( fop.onSelectorReplicate.call( it, _.mapExtend( null, o, { selector : split[ 1 ] } ) ) === undefined )
-//       return split.join( '' );
-//       else
-//       return split;
-//     });
-//
-//     selector2 = selector2.map( ( split ) => _.arrayIs( split ) ? split.join( '' ) : split );
-//     selector2.composite = _.resolver.composite;
-//
-//     return selector2;
-//   }
-//
-//   function onSelectorReplicate( selector )
-//   {
-//     return selector;
-//   }
-//
-// }
-//
-// onSelectorComposite_functor.defaults =
-// {
-//   prefix : '{',
-//   postfix : '}',
-//   onSelectorReplicate : null,
-//   isStrippedSelector : 0,
-// }
-//
-// let _onSelectorReplicateComposite = onSelectorComposite_functor({ isStrippedSelector : 1 });
-
-// debugger;
 let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite
 ({
   prefix : '{',
@@ -461,9 +374,6 @@ let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateCompos
   isStrippedSelector : 1,
   rewrapping : 0,
 });
-
-// let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite({ isStrippedSelector : 1 });
-// /* let _onSelectorDown = _.resolver.functor.onSelectorDownComposite({}); */
 
 //
 
@@ -499,9 +409,6 @@ function _onUpBegin()
   let resolver = rop.Resolver;
   let doing = true;
 
-  if( _global_.debugger )
-  debugger;
-
   if( !it.dstWritingDown )
   return;
 
@@ -512,10 +419,11 @@ function _onUpBegin()
   if( recursing )
   {
 
+    debugger;
     let o2 = _.mapOnly( it, resolver.resolve.defaults );
     o2.selector = it.dst;
     o2.src = it.iterator.src;
-    it.src = resolver.resolve( o2 );
+    it.src = resolver.resolve( o2 ); /* xxx : write result of selection to dst, never to src */
 
   }
 
@@ -547,7 +455,7 @@ function _onDownEnd()
 
   if( _.arrayIs( it.src ) && it.src[ functionSymbol ] )
   {
-    debugger;
+    debugger; /* xxx */
     _global_.debugger = 1;
   }
 
@@ -665,19 +573,6 @@ function _mapValsUnwrap()
   it.dst = _.mapVals( it.dst );
 }
 
-// //
-//
-// function _mapValsUnwrap2( result )
-// {
-//   if( !o.mapValsUnwrapping )
-//   return result
-//   if( !_.mapIs( result ) )
-//   return result;
-//   if( !_.all( result, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
-//   return result;
-//   return _.mapVals( result );
-// }
-
 //
 
 function _singleUnwrap()
@@ -750,12 +645,11 @@ function _resourceMapSelect()
   let kind = it.parsedSelector.kind;
   if( kind === '' || kind === null )
   {
-    // debugger;
   }
   else if( kind === 'f' )
   {
 
-    debugger;
+    debugger; /* xxx qqq : cover */
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
@@ -766,6 +660,7 @@ function _resourceMapSelect()
   }
   else
   {
+    debugger; /* xxx */
     let root = it.root || it;
     it.src = it.iterator.src[ kind ];
     if( it.selector === '.' )
@@ -773,11 +668,6 @@ function _resourceMapSelect()
     it.iterable = null;
     it.srcChanged();
   }
-  // else
-  // {
-  //   debugger;
-  //   throw _.ErrorLooking( 'Unknown kind of resource', _.strQuote( it.parsedSelector.full ) );
-  // }
 
 }
 
@@ -789,17 +679,15 @@ function _functionStringsJoinUp()
 {
   let it = this;
   let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
-  // let sop = it.selectOptions; // xxx
 
   _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
 
-  it.src = [ it.src ];
+  it.src = [ it.src ]; /* xxx : write result of selection to dst, never to src */
   it.src[ functionSymbol ] = it.selector;
 
   it.isFunction = it.selector;
   it.selector = 0;
 
-  // sop.selectorChanged.call( it );
   it.iterable = null;
   it.selectorChanged();
   it.srcChanged();
@@ -918,9 +806,7 @@ function resolveQualified_body( o )
   let resolver = this;
 
   _.assert( !!resolver._resolveQualifiedAct );
-  // _.assert( o.prefixlessAction === 'default' || o.defaultResourceKind === null, 'Prefixless action should be "default" if default resource is provided' );
 
-  // debugger;
   let result = resolver._resolveQualifiedAct( o );
 
   if( result === undefined )
@@ -1013,9 +899,6 @@ function _resolveQualifiedAct( o )
     if( o.iterationPreserve.isFunction === undefined )
     o.iterationPreserve.isFunction = null;
 
-    // if( o.selector === "path::out.*=1" )
-    // debugger;
-
     result = _.resolve
     ({
 
@@ -1041,7 +924,6 @@ function _resolveQualifiedAct( o )
   }
   catch( err )
   {
-    // debugger;
     throw resolver.errResolving
     ({
       selector : o.selector,
