@@ -6,7 +6,7 @@
   "license" : "MIT",
   "main" : "proto/dwtools/abase/l7/ResolverExtra.s",
   "files" : [ "proto/dwtools/abase/l7", "proto/dwtools/Tools.s" ],
-  "scripts" : { "test" : "wtest .run proto rapidity:-3", "docgen" : "wdocgen proto" },
+  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
   "repository" :
   {
     "type" : "git",
