@@ -115,7 +115,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: ../proto/dwtools/abase/l7/ResolverExtra.s
+        path: ../proto/wtools/abase/l7/ResolverExtra.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -125,13 +125,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
+        path: '{path::out.*=1}/source/wtools/abase/l7/ResolverExtra.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
+        path: '{path::out.*=1}/source/wtools/abase/l7/ResolverExtra.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
@@ -158,15 +158,15 @@ module:
         path:
           - ../proto
           - ../proto/Integration.test.s
-          - ../proto/dwtools
-          - ../proto/dwtools/Tools.s
-          - ../proto/dwtools/abase
-          - ../proto/dwtools/abase/l7
-          - ../proto/dwtools/abase/l7/ResolverExtra.s
-          - ../proto/dwtools/abase/l7.test
-          - ../proto/dwtools/abase/l7.test/ResolverExtra.test.s
-          - ../proto/dwtools/amid
-          - ../proto/dwtools/atop
+          - ../proto/wtools
+          - ../proto/wtools/Tools.s
+          - ../proto/wtools/abase
+          - ../proto/wtools/abase/l7
+          - ../proto/wtools/abase/l7/ResolverExtra.s
+          - ../proto/wtools/abase/l7.test
+          - ../proto/wtools/abase/l7.test/ResolverExtra.test.s
+          - ../proto/wtools/amid
+          - ../proto/wtools/atop
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -907,7 +907,7 @@ module:
       entry.proto.no.tests:
         criterion:
           tests: no.tests
-        path: proto/dwtools/abase/l7/ResolverExtra.s
+        path: proto/wtools/abase/l7/ResolverExtra.s
       entry.proto.only.tests:
         criterion:
           tests: only.tests
@@ -917,13 +917,13 @@ module:
           debug: debug
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
+        path: '{path::out.*=1}/source/wtools/abase/l7/ResolverExtra.s'
       entry.out.raw.debug.release:
         criterion:
           debug: release
           raw: raw
           content: prime
-        path: '{path::out.*=1}/source/dwtools/abase/l7/ResolverExtra.s'
+        path: '{path::out.*=1}/source/wtools/abase/l7/ResolverExtra.s'
       entry.out.compiled.debug.debug:
         criterion:
           debug: debug
