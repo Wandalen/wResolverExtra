@@ -1494,6 +1494,4 @@ module:
       ../.im.will.yml:
         hash: f29c08048580fe4b4ce45d11a01d3efc
         size: 5018
-      wResolverExtra.out.will.yml:
-        hash: 6d68616b0238a443c96ffb756b9790ba
-        size: 38419
+      wResolverExtra.out.will.yml: *ref_0
