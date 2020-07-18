@@ -315,7 +315,7 @@ function qualifiedResolve( test )
 let Self =
 {
 
-  name : 'Tools.base.l7.ResolverExtra',
+  name : 'Tools.l7.ResolverExtra',
   silencing : 1,
 
   context :
