@@ -1,5 +1,5 @@
 
-# module::ResolverExtra [![Status](https://github.com/Wandalen/wResolverExtra/workflows/publish/badge.svg)](https://github.com/Wandalen/wResolverExtra/actions?query=workflow%3Apublish) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
+# module::ResolverExtra [![status](https://github.com/Wandalen/wResolverExtra/workflows/publish/badge.svg)](https://github.com/Wandalen/wResolverExtra/actions?query=workflow%3Apublish) [![experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/emersion/stability-badges#experimental)
 
 Collection of routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.
 

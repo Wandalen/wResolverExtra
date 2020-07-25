@@ -8,8 +8,7 @@
 */
 
 /**
- * @file ResolverExtra.s.
- */
+ *  */
 
 /**
  * Collection of routines to resolve complex data structures.
