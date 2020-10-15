@@ -17,7 +17,7 @@ module:
       name: wResolverExtra
       org: noorg
       description: >-
-        Collection of routines to resolve complex data structures. It takes a
+        Collection of cross-platform routines to resolve complex data structures. It takes a
         complex data structure, traverses it and resolves all strings having
         inlined special substrings. Use the module to resolve your templates.
       enabled: 1
@@ -809,7 +809,7 @@ module:
       name: wResolverExtra
       org: noorg
       description: >-
-        Collection of routines to resolve complex data structures. It takes a
+        Collection of cross-platform routines to resolve complex data structures. It takes a
         complex data structure, traverses it and resolves all strings having
         inlined special substrings. Use the module to resolve your templates.
       enabled: 1

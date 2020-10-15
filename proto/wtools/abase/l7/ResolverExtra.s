@@ -3,7 +3,7 @@
 'use strict';
 
 /**
- * Collection of routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.
+ * Collection of cross-platform routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.
   @module Tools/base/ResolverExtra
 */
 
@@ -11,7 +11,7 @@
  *  */
 
 /**
- * Collection of routines to resolve complex data structures.
+ * Collection of cross-platform routines to resolve complex data structures.
  * @namespace Tools.ResolverExtra
  * @memberof module:Tools/base/resolver
  */
@@ -774,7 +774,7 @@ errResolvingThrow.defaults =
 // resolve
 // --
 
-function resolveQualified_pre( routine, args )
+function resolveQualified_head( routine, args )
 {
   if( args.length === 2 )
   args = [ { src : args[ 0 ], selector : args[ 1 ] } ]
@@ -867,8 +867,8 @@ resolveQualified_body.defaults =
 
 }
 
-let resolveQualified = _.routineFromPreAndBody( resolveQualified_pre, resolveQualified_body );
-let resolveQualifiedMaybe = _.routineFromPreAndBody( resolveQualified_pre, resolveQualified_body );
+let resolveQualified = _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualifiedMaybe = _.routineUnite( resolveQualified_head, resolveQualified_body );
 
 var defaults = resolveQualifiedMaybe.defaults;
 defaults.missingAction = 'undefine';
