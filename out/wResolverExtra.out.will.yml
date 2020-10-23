@@ -2,10 +2,13 @@ format: outwillfile-2.0
 root:
   - wResolverExtra.out
 consistency:
-  ../.ex.will.yml: &ref_0
+  wResolverExtra.out.will.yml: &ref_0
+    hash: 7b2076084571f093e3fd771897538cb5
+    size: 38466
+  ../.ex.will.yml: &ref_1
     hash: 840568defc7592c39d3d7886445f9f59
     size: 1905
-  ../.im.will.yml: &ref_1
+  ../.im.will.yml: &ref_2
     hash: f29c08048580fe4b4ce45d11a01d3efc
     size: 5018
 module:
@@ -20,18 +23,18 @@ module:
         your templates.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      interpreters:
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
+      keywords:
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
+      contributors:
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wresolverextra
-      npm.scripts: &ref_5
+      npm.scripts:
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -693,6 +696,24 @@ module:
           content: prime
         inherit:
           - files.transpile
+      exported.proto.export:
+        opts:
+          filePath: 'reflector::exported.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
+      exported.files.proto.export:
+        opts:
+          filePath: 'reflector::exported.files.proto.export'
+        criterion:
+          generated: 1
+          content: proto
+          export: 1
+        inherit:
+          - files.reflect
     build:
       proto.export:
         steps:
@@ -781,8 +802,9 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      wResolverExtra.out.will.yml: *ref_0
+      ../.ex.will.yml: *ref_1
+      ../.im.will.yml: *ref_2
   ../:
     about:
       name: wResolverExtra
@@ -794,13 +816,20 @@ module:
         your templates.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
+      interpreters:
+        - njs >= 10.0.0
+        - chrome >= 60.0.0
+        - firefox >= 60.0.0
+      keywords:
+        - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
+      contributors:
+        - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wresolverextra
-      npm.scripts: *ref_5
+      npm.scripts:
+        test: wtest .run proto/**
+        docgen: wdocgen .build proto
     path:
       module.willfiles:
         criterion:
@@ -1467,3 +1496,6 @@ module:
       ../.im.will.yml:
         hash: f29c08048580fe4b4ce45d11a01d3efc
         size: 5018
+      wResolverExtra.out.will.yml:
+        hash: 7b2076084571f093e3fd771897538cb5
+        size: 38466
