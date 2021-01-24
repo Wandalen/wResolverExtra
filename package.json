@@ -1,22 +1,35 @@
 {
-  "name" : "wresolverextra",
-  "version" : "0.3.118",
-  "description" : "Collection of cross-platform routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.",
-  "author" : "Kostiantyn Wandalen <wanalen@01.school>",
-  "license" : "MIT",
-  "main" : "proto/wtools/abase/l7/ResolverExtra.s",
-  "files" : [ "proto/wtools/abase/l7", "proto/wtools/Tools.s" ],
-  "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
-  "repository" :
-  {
-    "type" : "git",
-    "url" : "https://github.com/Wandalen/wResolverExtra.git"
+  "name": "wresolverextra",
+  "version": "0.3.119",
+  "description": "Collection of cross-platform routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.",
+  "author": "Kostiantyn Wandalen <wanalen@01.school>",
+  "license": "MIT",
+  "main": "proto/wtools/abase/l7/ResolverExtra.s",
+  "files": [
+    "proto/wtools/abase/l7",
+    "proto/wtools/Tools.s"
+  ],
+  "scripts": {
+    "test": "wtest .run 'proto/**' rapidity:-3",
+    "docgen": "wdocgen proto"
   },
-  "bugs" :
-  {
-    "url" : "https://github.com/Wandalen/wResolverExtra/issues"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wandalen/wResolverExtra.git"
   },
-  "dependencies" : { "wTools" : "alpha", "wresolver" : "alpha" },
-  "devDependencies" : { "wresolverextra" : "file:.", "wTesting" : "alpha" },
-  "keywords" : [ "wTools" ]
+  "bugs": {
+    "url": "https://github.com/Wandalen/wResolverExtra/issues"
+  },
+  "dependencies": {
+    "wTools": "alpha",
+    "wresolver": "alpha"
+  },
+  "devDependencies": {
+    "eslint": "7.1.0",
+    "wTesting": "alpha",
+    "wresolverextra": "file:."
+  },
+  "keywords": [
+    "wTools"
+  ]
 }
