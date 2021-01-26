@@ -1,4 +1,5 @@
-( function _ResolverExtra_test_s_() {
+( function _ResolverExtra_test_s_()
+{
 
 'use strict';
 
@@ -27,22 +28,12 @@ function selectorParse( test )
   let r = _.resolver;
 
   test.case = 'single inline, single split';
-  var expected =
-  [
-    [
-      [ "a", "::", "b" ]
-    ]
-  ]
+  var expected = [ [ [ 'a', '::', 'b' ] ] ]
   var got = r.selectorParse( '{a::b}' );
   test.identical( got, expected );
 
   test.case = 'implicit inline, single split';
-  var expected =
-  [
-    [
-      [ "a", "::", "b" ]
-    ]
-  ]
+  var expected = [ [ [ 'a', '::', 'b' ] ] ]
   var got = r.selectorParse( 'a::b' );
   test.identical( got, expected );
 
@@ -84,17 +75,17 @@ function selectorParse( test )
   test.case = 'several inlines';
   var expected =
   [
-    "x",
+    'x',
     [
-      [ "a", "::", "b" ],
-      [ "c", "::", "d" ]
+      [ 'a', '::', 'b' ],
+      [ 'c', '::', 'd' ]
     ],
-    "y",
+    'y',
     [
-      [ "ee", "::", "ff" ],
-      [ "gg", "::", "hhh" ]
+      [ 'ee', '::', 'ff' ],
+      [ 'gg', '::', 'hhh' ]
     ],
-    "z",
+    'z',
   ]
   var got = r.selectorParse( 'x{a::b/c::d}y{ee::ff/gg::hhh}z' );
   test.identical( got, expected );
@@ -102,27 +93,24 @@ function selectorParse( test )
   test.case = 'several inlines, split without ::';
   var expected =
   [
-    "x",
+    'x',
     [
-      [ "a", "::", "b" ],
-      [ "", "", "mid" ],
-      [ "c", "::", "d" ]
+      [ 'a', '::', 'b' ],
+      [ '', '', 'mid' ],
+      [ 'c', '::', 'd' ]
     ],
-    "y",
+    'y',
     [
-      [ "ee", "::", "ff" ],
-      [ "gg", "::", "hhh" ]
+      [ 'ee', '::', 'ff' ],
+      [ 'gg', '::', 'hhh' ]
     ],
-    "z",
+    'z',
   ]
   var got = r.selectorParse( 'x{a::b/mid/c::d}y{ee::ff/gg::hhh}z' );
   test.identical( got, expected );
 
   test.case = 'critical, no ::';
-  var expected =
-  [
-    'x{mid}y{}z',
-  ]
+  var expected = [ 'x{mid}y{}z' ]
   var got = r.selectorParse( 'x{mid}y{}z' );
   test.identical( got, expected );
 
@@ -130,17 +118,11 @@ function selectorParse( test )
   var expected =
   [
     'x',
-    [
-      [ 'aa', '::', '' ]
-    ],
+    [ [ 'aa', '::', '' ] ],
     'y',
-    [
-      [ '', '::', 'bb' ]
-    ],
+    [ [ '', '::', 'bb' ] ],
     'z',
-    [
-      [ '', '::', '' ]
-    ]
+    [ [ '', '::', '' ] ]
   ]
   var got = r.selectorParse( 'x{aa::}y{::bb}z{::}' );
   test.identical( got, expected );
@@ -220,7 +202,7 @@ function trivialResolve( test )
   var exp = 'Hello from here!';
   var got = _.resolver.resolveQualified
   ({
-    src : src,
+    src,
     selector : '{::dir/val1} from {::val2}!',
   });
   test.identical( got, exp );
@@ -265,7 +247,7 @@ function qualifiedResolve( test )
   var exp = 'Hello from here!';
   var got = _.resolver.resolveQualified
   ({
-    src : src,
+    src,
     selector : '{dir::val1} from {val2::.}!',
   });
   test.identical( got, exp );
@@ -298,7 +280,7 @@ function qualifiedResolve( test )
   var exp = 'user1 - 13 !';
   var got = _.resolver.resolveQualified
   ({
-    src : src,
+    src,
     selector : '{result::dir/userX} !',
   });
   test.identical( got, exp );
