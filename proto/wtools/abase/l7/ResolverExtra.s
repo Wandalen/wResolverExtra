@@ -1,4 +1,5 @@
-( function _ResolverExtra_s_( ) {
+( function _ResolverExtra_s_( )
+{
 
 'use strict';
 
@@ -136,7 +137,7 @@ function selectorIsComposite( selector )
     if( splits.length < 5 )
     return false;
 
-    splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
+    splits = _.strSplitsCoupledGroup({ splits, prefix : '{', postfix : '}' });
 
     if( !splits.some( ( split ) => _.arrayIs( split ) ) )
     return false;
@@ -231,7 +232,7 @@ function selectorParse( o )
     delimeter : [ '{', '}' ],
   });
 
-  splits = _.strSplitsCoupledGroup({ splits : splits, prefix : '{', postfix : '}' });
+  splits = _.strSplitsCoupledGroup({ splits, prefix : '{', postfix : '}' });
 
   if( splits[ 0 ] === '' )
   splits.splice( 0, 1 );
@@ -927,7 +928,7 @@ function _resolveQualifiedAct( o )
     ({
       selector : o.selector,
       rop : o,
-      err : err,
+      err,
     });
   }
 
