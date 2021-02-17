@@ -423,7 +423,7 @@ function _onUpBegin()
     let o2 = _.mapOnly( it, resolver.resolve.defaults );
     o2.selector = it.dst;
     o2.src = it.iterator.src;
-    it.src = resolver.resolve( o2 ); /* xxx : write result of selection to dst, never to src */
+    it.src = resolver.resolve( o2 ); /* xxx : write result of selection to dst, never to src? */
 
   }
 
@@ -453,11 +453,11 @@ function _onDownEnd()
   if( !it.dstWritingDown )
   return;
 
-  if( _.arrayIs( it.src ) && it.src[ functionSymbol ] )
-  {
-    debugger; /* xxx */
-    _global_.debugger = 1;
-  }
+  // if( _.arrayIs( it.src ) && it.src[ functionSymbol ] )
+  // {
+  //   debugger; /* xxx */
+  //   _global_.debugger = 1;
+  // }
 
   resolver._functionStringsJoinDown.call( it );
 
