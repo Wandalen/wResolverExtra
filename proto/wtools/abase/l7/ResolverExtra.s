@@ -43,7 +43,35 @@ let _global = _global_;
 let _ = _global_.wTools;
 let Parent = _.Selector;
 _.resolver = _.resolver || Object.create( null );
-// let Self = _.resolver = _.resolver || Object.create( null );
+
+// --
+// declare looker
+// --
+
+let Defaults =
+{
+
+  src : null,
+  selector : null,
+  defaultResourceKind : null,
+  prefixlessAction : 'resolved',
+  missingAction : 'throw',
+  visited : null,
+  singleUnwrapping : 1,
+  mapValsUnwrapping : 1,
+  mapFlattening : 1,
+  arrayWrapping : 0,
+  arrayFlattening : 1,
+  preservingIteration : 0,
+
+  Looker : null,
+  Resolver : null, /* xxx : remove */
+
+  // iteratorExtension : null,
+  // iterationExtension : null,
+  // iterationPreserve : null,
+
+}
 
 // --
 // parser
@@ -327,7 +355,8 @@ function selectorNormalize( src )
 function _onSelectorReplicate( o )
 {
   let it = this;
-  let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
   let selector = o.selector;
 
@@ -380,12 +409,11 @@ let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateCompos
 function _onSelectorDown()
 {
   let it = this;
-  let rop = it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   resolver._arrayFlatten.call( it );
-
-  // resolver._functionStringsJoinDown.call( it );
 
   if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver.composite )
   {
@@ -405,7 +433,8 @@ function _onSelectorDown()
 function _onUpBegin()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let doing = true;
 
@@ -423,7 +452,7 @@ function _onUpBegin()
     let o2 = _.mapOnly( it, resolver.resolve.defaults );
     o2.selector = it.dst;
     o2.src = it.iterator.src;
-    it.src = resolver.resolve( o2 ); /* xxx : write result of selection to dst, never to src? */
+    it.src = resolver.resolve( o2 ); /* zzz : write result of selection to dst, never to src? */
 
   }
 
@@ -434,7 +463,8 @@ function _onUpBegin()
 function _onUpEnd()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !it.dstWritingDown )
@@ -447,17 +477,12 @@ function _onUpEnd()
 function _onDownEnd()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !it.dstWritingDown )
   return;
-
-  // if( _.arrayIs( it.src ) && it.src[ functionSymbol ] )
-  // {
-  //   debugger; /* xxx */
-  //   _global_.debugger = 1;
-  // }
 
   resolver._functionStringsJoinDown.call( it );
 
@@ -473,7 +498,8 @@ function _onDownEnd()
 function _onQuantitativeFail( err )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   debugger;
@@ -511,7 +537,8 @@ function _onQuantitativeFail( err )
 function _arrayFlatten()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let currentModule = it.currentModule;
 
@@ -529,7 +556,8 @@ function _arrayFlatten()
 function _arrayWrap( result )
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !rop.arrayWrapping )
@@ -545,7 +573,8 @@ function _arrayWrap( result )
 function _mapsFlatten()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !rop.mapFlattening || !_.mapIs( it.dst ) )
@@ -560,7 +589,7 @@ function _mapsFlatten()
 function _mapValsUnwrap()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !rop.mapValsUnwrapping )
@@ -578,7 +607,8 @@ function _mapValsUnwrap()
 function _singleUnwrap()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  // debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !rop.singleUnwrapping )
@@ -605,7 +635,9 @@ function _singleUnwrap()
 function _queryParse()
 {
   let it = this;
-  let rop = it.resolveOptions;
+  // debugger;
+  // let rop = it.resolveExtraOptions;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( !it.selector )
@@ -636,7 +668,8 @@ function _queryParse()
 function _resourceMapSelect()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
   if( it.selector === undefined || it.selector === null )
@@ -678,7 +711,8 @@ function _resourceMapSelect()
 function _functionStringsJoinUp()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
 
   _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
 
@@ -689,7 +723,7 @@ function _functionStringsJoinUp()
   it.selector = 0;
 
   it.iterable = null;
-  it.selectorChanged();
+  it.iterationSelectorChanged();
   it.srcChanged();
 
 }
@@ -699,7 +733,8 @@ function _functionStringsJoinUp()
 function _functionStringsJoinDown()
 {
   let it = this;
-  let rop = it.resolveOptions ? it.resolveOptions : it.selectMultipleOptions.iteratorExtension.resolveOptions;
+  debugger;
+  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
@@ -834,7 +869,7 @@ function resolveQualified_body( o )
   let it =
   {
     dst : result,
-    resolveOptions : o,
+    resolveExtraOptions : o,
   }
 
   resolver._mapsFlatten.call( it );
@@ -845,28 +880,7 @@ function resolveQualified_body( o )
   return it.dst;
 }
 
-resolveQualified_body.defaults =
-{
-
-  src : null,
-  selector : null,
-  defaultResourceKind : null,
-  prefixlessAction : 'resolved',
-  missingAction : 'throw',
-  visited : null,
-  singleUnwrapping : 1,
-  mapValsUnwrapping : 1,
-  mapFlattening : 1,
-  arrayWrapping : 0,
-  arrayFlattening : 1,
-  preservingIteration : 0,
-  Resolver : null,
-
-  iteratorExtension : null,
-  iterationExtension : null,
-  iterationPreserve : null,
-
-}
+resolveQualified_body.defaults = Defaults;
 
 let resolveQualified = _.routineUnite( resolveQualified_head, resolveQualified_body );
 let resolveQualifiedMaybe = _.routineUnite( resolveQualified_head, resolveQualified_body );
@@ -883,24 +897,41 @@ function _resolveQualifiedAct( o )
 
   _.assert( arguments.length === 1 );
   _.assert( _.arrayIs( o.visited ) );
+  _.assert( !!_.Resolver );
 
   /* */
 
   try
   {
 
-    o.iteratorExtension = o.iteratorExtension || Object.create( null );
-    if( o.iteratorExtension.isFunction === undefined )
-    o.iteratorExtension.resolveOptions = o;
+    let iterator = Object.create( null );
+    // if( iterator.isFunction === undefined )
+    iterator.resolveExtraOptions = o; /* xxx */
 
-    o.iterationExtension = o.iterationExtension || Object.create( null );
+    let iterationPreserve = Object.create( null );
+    if( iterationPreserve.isFunction === undefined )
+    iterationPreserve.isFunction = null;
 
-    o.iterationPreserve = o.iterationPreserve || Object.create( null );
-    if( o.iterationPreserve.isFunction === undefined )
-    o.iterationPreserve.isFunction = null;
+    o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverExtra' });
+
+    // o.iteratorExtension = iterator
+    // o.iterationExtension = o.iterationExtension || Object.create( null );
+    // o.iterationPreserve = iterationPreserve;
+
+    // o.iteratorExtension = o.iteratorExtension || Object.create( null );
+    // if( o.iteratorExtension.isFunction === undefined )
+    // o.iteratorExtension.resolveExtraOptions = o;
+    //
+    // o.iterationExtension = o.iterationExtension || Object.create( null );
+    //
+    // o.iterationPreserve = o.iterationPreserve || Object.create( null );
+    // if( o.iterationPreserve.isFunction === undefined )
+    // o.iterationPreserve.isFunction = null;
 
     result = _.resolve
     ({
+
+      Looker : o.Looker,
 
       src : o.src,
       selector : o.selector,
@@ -915,9 +946,9 @@ function _resolveQualifiedAct( o )
       onDownEnd : resolver._onDownEnd,
       onQuantitativeFail : resolver._onQuantitativeFail,
 
-      iteratorExtension : o.iteratorExtension,
-      iterationExtension : o.iterationExtension,
-      iterationPreserve : o.iterationPreserve,
+      // iteratorExtension : o.iteratorExtension,
+      // iterationExtension : o.iterationExtension,
+      // iterationPreserve : o.iterationPreserve,
 
     });
 
@@ -935,7 +966,7 @@ function _resolveQualifiedAct( o )
   return result;
 }
 
-var defaults = _resolveQualifiedAct.defaults = _.mapExtend( null, resolveQualified.defaults )
+var defaults = _resolveQualifiedAct.defaults = Defaults;
 
 // --
 // declare
