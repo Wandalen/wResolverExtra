@@ -195,7 +195,7 @@ function selectorShortSplit( o )
   _.assertRoutineOptions( selectorShortSplit, o );
   _.assert( arguments.length === 1 );
   _.assert( !_.strHas( o.selector, '/' ) );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.entity.strType( o.selector ) );
 
   let splits = this._selectorShortSplit( o.selector );
 
@@ -222,7 +222,7 @@ function selectorLongSplit( o )
 
   _.routineOptions( selectorLongSplit, o );
   _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.entity.strType( o.selector ) );
 
   let selectors = o.selector.split( '/' );
 
@@ -252,7 +252,7 @@ function selectorParse( o )
 
   _.routineOptions( selectorParse, o );
   _.assert( arguments.length === 1 );
-  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.strType( o.selector ) );
+  _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.entity.strType( o.selector ) );
 
   let splits = _.strSplitFast
   ({
@@ -1032,6 +1032,16 @@ let ResolverExtension =
 
 }
 
+let SupplementTools =
+{
+
+  ResolverExtra : _.Resolver,
+  resolveQualified,
+  resolveQualifiedMaybe,
+
+}
+
+_.mapSupplement( _, SupplementTools );
 _.mapExtend( _.resolver, ResolverExtension );
 
 if( typeof module !== 'undefined' )
