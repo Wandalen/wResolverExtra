@@ -682,7 +682,7 @@ function _resourceMapSelect()
   else if( kind === 'f' )
   {
 
-    debugger; /* xxx qqq : cover */
+    debugger; /* zzz qqq : cover */
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
@@ -693,7 +693,7 @@ function _resourceMapSelect()
   }
   else
   {
-    debugger; /* xxx */
+    debugger; /* zzz */
     let root = it.root || it;
     it.src = it.iterator.src[ kind ];
     if( it.selector === '.' )
@@ -716,7 +716,7 @@ function _functionStringsJoinUp()
 
   _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
 
-  it.src = [ it.src ]; /* xxx : write result of selection to dst, never to src */
+  it.src = [ it.src ]; /* zzz : write result of selection to dst, never to src? */
   it.src[ functionSymbol ] = it.selector;
 
   it.isFunction = it.selector;
@@ -906,7 +906,7 @@ function _resolveQualifiedAct( o )
 
     let iterator = Object.create( null );
     // if( iterator.isFunction === undefined )
-    iterator.resolveExtraOptions = o; /* xxx */
+    iterator.resolveExtraOptions = o; /* zzz : remove? */
 
     let iterationPreserve = Object.create( null );
     if( iterationPreserve.isFunction === undefined )
