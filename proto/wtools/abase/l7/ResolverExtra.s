@@ -51,6 +51,8 @@ _.resolver = _.resolver || Object.create( null );
 let Defaults =
 {
 
+  ... _.resolver.resolve.defaults,
+
   src : null,
   selector : null,
   defaultResourceKind : null,
@@ -72,6 +74,93 @@ let Defaults =
   // iterationPreserve : null,
 
 }
+
+let functionSymbol = Symbol.for( 'function' );
+let Looker =
+{
+
+  name : 'resolver',
+  shortName : 'resolver',
+
+  // parser
+
+  strRequestParse,
+
+  _selectorIs,
+  selectorIs,
+  selectorIsComposite,
+  _selectorShortSplit,
+  selectorShortSplit,
+  selectorLongSplit,
+  selectorParse,
+  selectorStr,
+  selectorNormalize,
+
+  // handler
+
+  _onSelectorReplicate,
+  _onSelectorReplicateComposite : null,
+  _onSelectorDown,
+  _onUpBegin,
+  _onUpEnd,
+  _onDownEnd,
+  _onQuantitativeFail,
+
+  //
+
+  _arrayFlatten,
+  _arrayWrap,
+  _mapsFlatten,
+  _mapValsUnwrap,
+  _singleUnwrap,
+
+  _queryParse,
+  _resourceMapSelect,
+
+  // function
+
+  _functionStringsJoinUp,
+  _functionStringsJoinDown,
+
+  // err
+
+  errResolving,
+  errResolvingThrow,
+
+  // resolve
+
+  resolveQualified : null,
+  resolveQualifiedMaybe : null,
+  _resolveQualifiedAct,
+
+}
+
+let Iterator =
+{
+  resolveExtraOptions : null,
+}
+
+let Iteration =
+{
+}
+
+let IterationPreserve =
+{
+  isFunction : null,
+}
+
+let ResolverExtra = _.looker.make
+({
+  name : 'ResolverExtra',
+  parent : _.Resolver,
+  looker : Looker,
+  iterator : Iterator,
+  iteration : Iteration,
+  iterationPreserve : IterationPreserve,
+});
+
+const Self = ResolverExtra;
+_.assert( ResolverExtra.Iterator.resolveExtraOptions !== undefined );
 
 // --
 // parser
@@ -355,7 +444,6 @@ function selectorNormalize( src )
 function _onSelectorReplicate( o )
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
   let selector = o.selector;
@@ -396,7 +484,7 @@ function _onSelectorReplicate( o )
 
 }
 
-let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite
+let _onSelectorReplicateComposite = ResolverExtra._onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite
 ({
   prefix : '{',
   postfix : '}',
@@ -409,7 +497,6 @@ let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateCompos
 function _onSelectorDown()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -433,7 +520,6 @@ function _onSelectorDown()
 function _onUpBegin()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let doing = true;
@@ -463,7 +549,6 @@ function _onUpBegin()
 function _onUpEnd()
 {
   let it = this;
-  debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -477,7 +562,6 @@ function _onUpEnd()
 function _onDownEnd()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -498,7 +582,6 @@ function _onDownEnd()
 function _onQuantitativeFail( err )
 {
   let it = this;
-  debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -537,7 +620,6 @@ function _onQuantitativeFail( err )
 function _arrayFlatten()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
   let currentModule = it.currentModule;
@@ -556,7 +638,6 @@ function _arrayFlatten()
 function _arrayWrap( result )
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -573,7 +654,6 @@ function _arrayWrap( result )
 function _mapsFlatten()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -607,7 +687,6 @@ function _mapValsUnwrap()
 function _singleUnwrap()
 {
   let it = this;
-  // debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -635,8 +714,6 @@ function _singleUnwrap()
 function _queryParse()
 {
   let it = this;
-  // debugger;
-  // let rop = it.resolveExtraOptions;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -668,7 +745,6 @@ function _queryParse()
 function _resourceMapSelect()
 {
   let it = this;
-  debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
 
@@ -711,7 +787,6 @@ function _resourceMapSelect()
 function _functionStringsJoinUp()
 {
   let it = this;
-  debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
 
   _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
@@ -733,13 +808,11 @@ function _functionStringsJoinUp()
 function _functionStringsJoinDown()
 {
   let it = this;
-  debugger;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
 
-  debugger;
   if( _.arrayIs( it.dst ) && it.dst.every( ( e ) => _.arrayIs( e ) ) )
   {
     it.dst = it.dst.map( ( e ) => e.join( ' ' ) );
@@ -882,8 +955,8 @@ function resolveQualified_body( o )
 
 resolveQualified_body.defaults = Defaults;
 
-let resolveQualified = _.routineUnite( resolveQualified_head, resolveQualified_body );
-let resolveQualifiedMaybe = _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualified = ResolverExtra.resolveQualified  = _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualifiedMaybe = ResolverExtra.resolveQualifiedMaybe  = _.routineUnite( resolveQualified_head, resolveQualified_body );
 
 var defaults = resolveQualifiedMaybe.defaults;
 defaults.missingAction = 'undefine';
@@ -904,15 +977,15 @@ function _resolveQualifiedAct( o )
   try
   {
 
-    let iterator = Object.create( null );
-    // if( iterator.isFunction === undefined )
-    iterator.resolveExtraOptions = o; /* zzz : remove? */
-
-    let iterationPreserve = Object.create( null );
-    if( iterationPreserve.isFunction === undefined )
-    iterationPreserve.isFunction = null;
-
-    o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverExtra' });
+    // let iterator = Object.create( null );
+    // // if( iterator.isFunction === undefined )
+    // iterator.resolveExtraOptions = o; /* zzz : remove? */
+    //
+    // let iterationPreserve = Object.create( null );
+    // if( iterationPreserve.isFunction === undefined )
+    // iterationPreserve.isFunction = null;
+    //
+    // o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverExtra' });
 
     // o.iteratorExtension = iterator
     // o.iterationExtension = o.iterationExtension || Object.create( null );
@@ -928,8 +1001,10 @@ function _resolveQualifiedAct( o )
     // if( o.iterationPreserve.isFunction === undefined )
     // o.iterationPreserve.isFunction = null;
 
-    result = _.resolve
-    ({
+    o.Looker = o.Looker || Self;
+
+    let o2 =
+    {
 
       Looker : o.Looker,
 
@@ -938,6 +1013,7 @@ function _resolveQualifiedAct( o )
       preservingIteration : o.preservingIteration,
       missingAction : o.missingAction,
       recursive : 32,
+      // resolveExtraOptions : o, /* xxx yyy */
 
       onSelectorReplicate : resolver._onSelectorReplicate,
       onSelectorDown : resolver._onSelectorDown,
@@ -950,7 +1026,15 @@ function _resolveQualifiedAct( o )
       // iterationExtension : o.iterationExtension,
       // iterationPreserve : o.iterationPreserve,
 
-    });
+    }
+
+    let it = _.resolve.head( Defaults, [ o2 ] );
+    it.iterator.resolveExtraOptions = o;
+
+    it.start();
+
+    return it.result;
+    // result = _.resolve( o2 );
 
   }
   catch( err )
@@ -972,7 +1056,7 @@ var defaults = _resolveQualifiedAct.defaults = Defaults;
 // declare
 // --
 
-let functionSymbol = Symbol.for( 'function' );
+// let functionSymbol = Symbol.for( 'function' );
 let ResolverExtension =
 {
 
@@ -1035,7 +1119,8 @@ let ResolverExtension =
 let SupplementTools =
 {
 
-  ResolverExtra : _.Resolver,
+  ResolverExtra,
+  // ResolverExtra : _.Resolver,
   resolveQualified,
   resolveQualifiedMaybe,
 
