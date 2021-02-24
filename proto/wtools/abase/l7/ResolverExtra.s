@@ -1013,7 +1013,6 @@ function _resolveQualifiedAct( o )
       preservingIteration : o.preservingIteration,
       missingAction : o.missingAction,
       recursive : 32,
-      // resolveExtraOptions : o, /* xxx yyy */
 
       onSelectorReplicate : resolver._onSelectorReplicate,
       onSelectorDown : resolver._onSelectorDown,
