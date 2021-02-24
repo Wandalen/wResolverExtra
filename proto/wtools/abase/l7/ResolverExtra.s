@@ -45,7 +45,7 @@ let Parent = _.Selector;
 _.resolver = _.resolver || Object.create( null );
 
 // --
-// declare looker
+// relations
 // --
 
 let Defaults =
@@ -74,93 +74,6 @@ let Defaults =
   // iterationPreserve : null,
 
 }
-
-let functionSymbol = Symbol.for( 'function' );
-let Looker =
-{
-
-  name : 'resolver',
-  shortName : 'resolver',
-
-  // parser
-
-  strRequestParse,
-
-  _selectorIs,
-  selectorIs,
-  selectorIsComposite,
-  _selectorShortSplit,
-  selectorShortSplit,
-  selectorLongSplit,
-  selectorParse,
-  selectorStr,
-  selectorNormalize,
-
-  // handler
-
-  _onSelectorReplicate,
-  _onSelectorReplicateComposite : null,
-  _onSelectorDown,
-  _onUpBegin,
-  _onUpEnd,
-  _onDownEnd,
-  _onQuantitativeFail,
-
-  //
-
-  _arrayFlatten,
-  _arrayWrap,
-  _mapsFlatten,
-  _mapValsUnwrap,
-  _singleUnwrap,
-
-  _queryParse,
-  _resourceMapSelect,
-
-  // function
-
-  _functionStringsJoinUp,
-  _functionStringsJoinDown,
-
-  // err
-
-  errResolving,
-  errResolvingThrow,
-
-  // resolve
-
-  resolveQualified : null,
-  resolveQualifiedMaybe : null,
-  _resolveQualifiedAct,
-
-}
-
-let Iterator =
-{
-  resolveExtraOptions : null,
-}
-
-let Iteration =
-{
-}
-
-let IterationPreserve =
-{
-  isFunction : null,
-}
-
-let ResolverExtra = _.looker.make
-({
-  name : 'ResolverExtra',
-  parent : _.Resolver,
-  looker : Looker,
-  iterator : Iterator,
-  iteration : Iteration,
-  iterationPreserve : IterationPreserve,
-});
-
-const Self = ResolverExtra;
-_.assert( ResolverExtra.Iterator.resolveExtraOptions !== undefined );
 
 // --
 // parser
@@ -484,7 +397,7 @@ function _onSelectorReplicate( o )
 
 }
 
-let _onSelectorReplicateComposite = ResolverExtra._onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite
+let _onSelectorReplicateComposite = /*ResolverExtra._onSelectorReplicateComposite =*/ _.resolver.functor.onSelectorReplicateComposite
 ({
   prefix : '{',
   postfix : '}',
@@ -769,7 +682,7 @@ function _resourceMapSelect()
   }
   else
   {
-    debugger; /* zzz */
+    /* zzz */
     let root = it.root || it;
     it.src = it.iterator.src[ kind ];
     if( it.selector === '.' )
@@ -907,6 +820,8 @@ function resolveQualified_head( routine, args )
   return o;
 }
 
+/* xxx : implement start */
+
 //
 
 function resolveQualified_body( o )
@@ -936,7 +851,6 @@ function resolveQualified_body( o )
       rop : o,
       err : result,
     });
-
   }
 
   let it =
@@ -955,8 +869,8 @@ function resolveQualified_body( o )
 
 resolveQualified_body.defaults = Defaults;
 
-let resolveQualified = ResolverExtra.resolveQualified  = _.routineUnite( resolveQualified_head, resolveQualified_body );
-let resolveQualifiedMaybe = ResolverExtra.resolveQualifiedMaybe  = _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualified = /*ResolverExtra.resolveQualified = */ _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualifiedMaybe = /*ResolverExtra.resolveQualifiedMaybe = */ _.routineUnite( resolveQualified_head, resolveQualified_body );
 
 var defaults = resolveQualifiedMaybe.defaults;
 defaults.missingAction = 'undefine';
@@ -970,36 +884,12 @@ function _resolveQualifiedAct( o )
 
   _.assert( arguments.length === 1 );
   _.assert( _.arrayIs( o.visited ) );
-  _.assert( !!_.Resolver );
+  // _.assert( !!_.resolver.Resolver );
 
   /* */
 
   try
   {
-
-    // let iterator = Object.create( null );
-    // // if( iterator.isFunction === undefined )
-    // iterator.resolveExtraOptions = o; /* zzz : remove? */
-    //
-    // let iterationPreserve = Object.create( null );
-    // if( iterationPreserve.isFunction === undefined )
-    // iterationPreserve.isFunction = null;
-    //
-    // o.Looker = _.looker.make({ iterationPreserve, iterator, parent : o.Looker || _.Resolver, name : 'ResolverExtra' });
-
-    // o.iteratorExtension = iterator
-    // o.iterationExtension = o.iterationExtension || Object.create( null );
-    // o.iterationPreserve = iterationPreserve;
-
-    // o.iteratorExtension = o.iteratorExtension || Object.create( null );
-    // if( o.iteratorExtension.isFunction === undefined )
-    // o.iteratorExtension.resolveExtraOptions = o;
-    //
-    // o.iterationExtension = o.iterationExtension || Object.create( null );
-    //
-    // o.iterationPreserve = o.iterationPreserve || Object.create( null );
-    // if( o.iterationPreserve.isFunction === undefined )
-    // o.iterationPreserve.isFunction = null;
 
     o.Looker = o.Looker || Self;
 
@@ -1021,10 +911,6 @@ function _resolveQualifiedAct( o )
       onDownEnd : resolver._onDownEnd,
       onQuantitativeFail : resolver._onQuantitativeFail,
 
-      // iteratorExtension : o.iteratorExtension,
-      // iterationExtension : o.iterationExtension,
-      // iterationPreserve : o.iterationPreserve,
-
     }
 
     let it = _.resolve.head( Defaults, [ o2 ] );
@@ -1033,8 +919,6 @@ function _resolveQualifiedAct( o )
     it.start();
 
     return it.result;
-    // result = _.resolve( o2 );
-
   }
   catch( err )
   {
@@ -1052,8 +936,125 @@ function _resolveQualifiedAct( o )
 var defaults = _resolveQualifiedAct.defaults = Defaults;
 
 // --
-// declare
+// relations
 // --
+
+_.assert( !!_.resolver.Resolver.ResolverSelector );
+let ResolverExtraSelector = _.looker.make
+({
+  name : 'ResolverExtraSelector',
+  parent : _.resolver.Resolver.ResolverSelector,
+  defaults :
+  {
+    defaultResourceKind : null,
+    prefixlessAction : null,
+    singleUnwrapping : null,
+    mapValsUnwrapping : null,
+    mapFlattening : null,
+    arrayWrapping : null,
+    arrayFlattening : null,
+    Resolver : null,
+  },
+});
+
+let functionSymbol = Symbol.for( 'function' );
+let Looker =
+{
+
+  name : 'resolver',
+  shortName : 'resolver',
+
+  // parser
+
+  strRequestParse,
+
+  _selectorIs,
+  selectorIs,
+  selectorIsComposite,
+  _selectorShortSplit,
+  selectorShortSplit,
+  selectorLongSplit,
+  selectorParse,
+  selectorStr,
+  selectorNormalize,
+
+  // handler
+
+  _onSelectorReplicate,
+  _onSelectorReplicateComposite,
+  _onSelectorDown,
+  _onUpBegin,
+  _onUpEnd,
+  _onDownEnd,
+  _onQuantitativeFail,
+
+  //
+
+  _arrayFlatten,
+  _arrayWrap,
+  _mapsFlatten,
+  _mapValsUnwrap,
+  _singleUnwrap,
+
+  _queryParse,
+  _resourceMapSelect,
+
+  // function
+
+  _functionStringsJoinUp,
+  _functionStringsJoinDown,
+
+  // err
+
+  errResolving,
+  errResolvingThrow,
+
+  // resolve
+
+  resolveQualified,
+  resolveQualifiedMaybe,
+  _resolveQualifiedAct,
+
+  /* xxx : uncomment */
+  // head,
+  makeAndLook : resolveQualified,
+
+  ResolverSelector : ResolverExtraSelector,
+
+}
+
+_.assert( !!_.resolver.Resolver );
+
+let Iterator =
+{
+  resolveExtraOptions : null,
+}
+
+let Iteration =
+{
+}
+
+let IterationPreserve =
+{
+  isFunction : null,
+}
+
+let ResolverExtraReplicator = _.looker.make
+({
+  name : 'ResolverExtra',
+  parent : _.resolver.Resolver,
+  // defaults : Defaults, /* xxx */
+  looker : Looker,
+  iterator : Iterator,
+  iteration : Iteration,
+  iterationPreserve : IterationPreserve,
+});
+
+/* xxx : pass defaults? */
+const Self = ResolverExtraReplicator;
+_.assert( ResolverExtraReplicator.Iterator.resolveExtraOptions !== undefined );
+
+//
 
 // let functionSymbol = Symbol.for( 'function' );
 let ResolverExtension =
@@ -1113,19 +1114,24 @@ let ResolverExtension =
   resolveQualifiedMaybe,
   _resolveQualifiedAct,
 
+  ResolverExtra : ResolverExtraReplicator,
+  ResolverExtraReplicator,
+  ResolverExtraSelector,
+
 }
 
-let SupplementTools =
+let ToolsExtension =
 {
 
-  ResolverExtra,
-  // ResolverExtra : _.Resolver,
+  // ResolverExtra : ResolverExtraReplicator,
+  // ResolverExtraReplicator,
+  // ResolverExtraSelector,
   resolveQualified,
   resolveQualifiedMaybe,
 
 }
 
-_.mapSupplement( _, SupplementTools );
+_.mapSupplement( _, ToolsExtension );
 _.mapExtend( _.resolver, ResolverExtension );
 
 if( typeof module !== 'undefined' )
