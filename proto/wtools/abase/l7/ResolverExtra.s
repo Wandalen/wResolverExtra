@@ -41,8 +41,9 @@ if( typeof module !== 'undefined' )
 
 let _global = _global_;
 let _ = _global_.wTools;
-let Parent = _.Selector;
-_.resolver = _.resolver || Object.create( null );
+let Parent = _.resolver.Resolver;
+_.resolver2 = _.resolver2 || Object.create( null );
+_.assert( !!_.resolver.Resolver );
 
 // --
 // relations
@@ -66,14 +67,19 @@ let Defaults =
   arrayFlattening : 1,
   preservingIteration : 0,
 
+  recursive : 32,
+
   Looker : null,
   Resolver : null, /* xxx : remove */
 
-  // iteratorExtension : null,
-  // iterationExtension : null,
-  // iterationPreserve : null,
-
 }
+
+delete Defaults.onSelectorReplicate;
+delete Defaults.onSelectorDown;
+delete Defaults.onUpBegin;
+delete Defaults.onUpEnd;
+delete Defaults.onDownEnd;
+delete Defaults.onQuantitativeFail;
 
 // --
 // parser
@@ -361,6 +367,8 @@ function _onSelectorReplicate( o )
   let resolver = rop.Resolver;
   let selector = o.selector;
 
+  // debugger; /* xxx */
+
   if( !_.strIs( selector ) )
   return;
 
@@ -397,7 +405,7 @@ function _onSelectorReplicate( o )
 
 }
 
-let _onSelectorReplicateComposite = /*ResolverExtra._onSelectorReplicateComposite =*/ _.resolver.functor.onSelectorReplicateComposite
+let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateComposite
 ({
   prefix : '{',
   postfix : '}',
@@ -413,9 +421,11 @@ function _onSelectorDown()
   let rop = it.resolveExtraOptions;
   let resolver = rop.Resolver;
 
+  // debugger; /* xxx */
+
   resolver._arrayFlatten.call( it );
 
-  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver.composite )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.composite )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -448,6 +458,7 @@ function _onUpBegin()
   {
 
     debugger;
+    /* qqq : cover please */
     let o2 = _.mapOnly( it, resolver.resolve.defaults );
     o2.selector = it.dst;
     o2.src = it.iterator.src;
@@ -477,6 +488,8 @@ function _onDownEnd()
   let it = this;
   let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
   let resolver = rop.Resolver;
+
+  // debugger; /* xxx */
 
   if( !it.dstWritingDown )
   return;
@@ -537,7 +550,8 @@ function _arrayFlatten()
   let resolver = rop.Resolver;
   let currentModule = it.currentModule;
 
-  _.assert( _.mapIs( rop ) );
+  // _.assert( _.mapIs( rop ) );
+  _.assert( _.objectIs( rop ) );
 
   if( !rop.arrayFlattening || !_.arrayIs( it.dst ) )
   return;
@@ -748,7 +762,7 @@ function errResolving( o )
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
   debugger;
-  return _.err( 'Failed to resolve', _.color.strFormat( o.selector, 'path' ), '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
 }
 
 errResolving.defaults =
@@ -796,22 +810,143 @@ errResolvingThrow.defaults =
 // resolve
 // --
 
-function resolveQualified_head( routine, args )
+function head( routine, args )
 {
-  if( args.length === 2 )
-  args = [ { src : args[ 0 ], selector : args[ 1 ] } ]
+  _.assert( arguments.length === 2 );
+  let o = Self.optionsFromArguments( args );
+  if( _.routineIs( routine ) )
+  o.Looker = o.Looker || routine.defaults.Looker || Self;
+  else
+  o.Looker = o.Looker || routine.Looker || Self;
+  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
+  _.routineOptionsPreservingUndefines( routine, o );
+  else
+  _.routineOptionsPreservingUndefines( null, o, routine );
+  o.Looker.optionsForm( routine, o );
+  o.optionsForSelect = o.Looker.optionsForSelectFrom( o );
+  let it = o.Looker.optionsToIteration( o );
+  return it;
+}
+
+//
+
+function perform() /* xxx : rename to body? */
+{
+  let it = this;
+
+  _.assert( _.arrayIs( it.visited ) );
+  // _.assert( !!it._resolveQualifiedAct );
+  _.assert( !!it.Resolver );
+  _.assert( arguments.length === 0 );
+  _.assert( _.arrayIs( it.visited ) );
+  _.assert( !!it.resolveExtraOptions );
+
+  _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
+  _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
+  _.assert( it.onUpBegin === it.Looker._onUpBegin );
+  _.assert( it.onUpEnd === it.Looker._onUpEnd );
+  _.assert( it.onDownEnd === it.Looker._onDownEnd );
+  _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
+
+  /* */
+
+  try
+  {
+    Parent.perform.call( it );
+  }
+  catch( err )
+  {
+    throw it.errResolving
+    ({
+      selector : it.selector,
+      rop : it,
+      err,
+    });
+  }
+
+  let result = it.result;
+
+  if( result === undefined )
+  {
+    result = it.errResolving
+    ({
+      selector : it.selector,
+      rop : it,
+      err : _.ErrorLooking( it.selector, 'was not found' ),
+    })
+  }
+
+  if( _.errIs( result ) )
+  {
+    return it.errResolvingThrow
+    ({
+      missingAction : it.missingAction,
+      selector : it.selector,
+      rop : it,
+      err : result,
+    });
+  }
+
+  let it2 = /* xxx : remove? */
+  {
+    dst : result,
+    resolveExtraOptions : it,
+  }
+
+  it._mapsFlatten.call( it2 );
+  it._mapValsUnwrap.call( it2 );
+  it._singleUnwrap.call( it2 );
+  it._arrayWrap.call( it2 );
+
+  return it;
+}
+
+//
+
+function optionsFromArguments( args )
+{
   let o = args[ 0 ];
 
-  _.routineOptions( routine, args );
+  if( args.length === 2 )
+  {
+    _.assert( !_.resolver2.iterationIs( args[ 0 ] ) );
+    o = { src : args[ 0 ], selector : args[ 1 ] }
+  }
+
+  _.assert( args.length === 1 || args.length === 2 );
+  _.assert( arguments.length === 1 );
+  _.assert( _.mapIs( o ) );
+
+  return o;
+}
+
+//
+
+function optionsForm( routine, o )
+{
+  Parent.optionsForm.call( this, routine, o );
 
   if( o.visited === null )
   o.visited = [];
 
   if( o.Resolver === null )
-  o.Resolver = _.resolver; /* xxx */
+  o.Resolver = _.resolver2; /* xxx */
 
+    //   src : o.src,
+    //   selector : o.selector,
+    //   preservingIteration : o.preservingIteration,
+    //   missingAction : o.missingAction,
+    //   recursive : 32,
+    //
+    //   onSelectorReplicate : resolver._onSelectorReplicate,
+    //   onSelectorDown : resolver._onSelectorDown,
+    //   onUpBegin : resolver._onUpBegin,
+    //   onUpEnd : resolver._onUpEnd,
+    //   onDownEnd : resolver._onDownEnd,
+    //   onQuantitativeFail : resolver._onQuantitativeFail,
+
+  _.assert( o.resolvingRecursive !== undefined );
   _.assert( arguments.length === 2 );
-  _.assert( args.length === 1 || args.length === 2 );
   _.assert( _.longHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
   _.assert( _.longHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
   _.assert( _.arrayIs( o.visited ) );
@@ -820,149 +955,151 @@ function resolveQualified_head( routine, args )
   return o;
 }
 
-/* xxx : implement start */
+//
+
+function optionsToIteration( o )
+{
+  let it = Parent.optionsToIteration.call( this, o );
+
+  it.iterator.resolveExtraOptions = o; /* xxx */
+
+  _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
+  _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
+  _.assert( it.onUpBegin === it.Looker._onUpBegin );
+  _.assert( it.onUpEnd === it.Looker._onUpEnd );
+  _.assert( it.onDownEnd === it.Looker._onDownEnd );
+  _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
+
+  return it;
+}
 
 //
 
-function resolveQualified_body( o )
+function optionsForSelectFrom( o )
 {
-  let resolver = this;
+  let it = this;
+  let o2 = Parent.optionsForSelectFrom.call( it, o );
+  // debugger; /* xxx */
+  return o2;
+}
 
-  _.assert( !!resolver._resolveQualifiedAct );
+//
 
-  let result = resolver._resolveQualifiedAct( o );
+function optionsToIterationOfSelector( o )
+{
 
-  if( result === undefined )
-  {
-    result = resolver.errResolving
-    ({
-      selector : o.selector,
-      rop : o,
-      err : _.ErrorLooking( o.selector, 'was not found' ),
-    })
-  }
+  _.assert( o.onSelectorReplicate === undefined );
+  _.assert( o.onSelectorDown === undefined );
+  _.assert( o.onUpBegin === undefined );
+  _.assert( o.onUpEnd === undefined );
+  _.assert( o.onDownEnd === undefined );
+  _.assert( o.onQuantitativeFail === undefined );
 
-  if( _.errIs( result ) )
-  {
-    return resolver.errResolvingThrow
-    ({
-      missingAction : o.missingAction,
-      selector : o.selector,
-      rop : o,
-      err : result,
-    });
-  }
+  let it = Parent.ResolverSelector.optionsToIteration.call( this, o );
 
-  let it =
-  {
-    dst : result,
-    resolveExtraOptions : o,
-  }
+  _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
+  _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
+  _.assert( it.onUpBegin === it.Looker._onUpBegin );
+  _.assert( it.onUpEnd === it.Looker._onUpEnd );
+  _.assert( it.onDownEnd === it.Looker._onDownEnd );
+  _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
 
-  resolver._mapsFlatten.call( it );
-  resolver._mapValsUnwrap.call( it );
-  resolver._singleUnwrap.call( it );
-  resolver._arrayWrap.call( it );
+  return it;
+}
 
-  return it.dst;
+//
+
+function resolveQualified_head( routine, args )
+{
+  return Self.head( routine, args );
+}
+
+//
+
+function resolveQualified_body( it )
+{
+  it.perform();
+  return it.result;
 }
 
 resolveQualified_body.defaults = Defaults;
 
-let resolveQualified = /*ResolverExtra.resolveQualified = */ _.routineUnite( resolveQualified_head, resolveQualified_body );
-let resolveQualifiedMaybe = /*ResolverExtra.resolveQualifiedMaybe = */ _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualified = _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolveQualifiedMaybe = _.routineUnite( resolveQualified_head, resolveQualified_body );
 
 var defaults = resolveQualifiedMaybe.defaults;
 defaults.missingAction = 'undefine';
 
+// //
 //
-
-function _resolveQualifiedAct( o )
-{
-  let resolver = this;
-  let result;
-
-  _.assert( arguments.length === 1 );
-  _.assert( _.arrayIs( o.visited ) );
-  // _.assert( !!_.resolver.Resolver );
-
-  /* */
-
-  try
-  {
-
-    o.Looker = o.Looker || Self;
-
-    let o2 =
-    {
-
-      Looker : o.Looker,
-
-      src : o.src,
-      selector : o.selector,
-      preservingIteration : o.preservingIteration,
-      missingAction : o.missingAction,
-      recursive : 32,
-
-      onSelectorReplicate : resolver._onSelectorReplicate,
-      onSelectorDown : resolver._onSelectorDown,
-      onUpBegin : resolver._onUpBegin,
-      onUpEnd : resolver._onUpEnd,
-      onDownEnd : resolver._onDownEnd,
-      onQuantitativeFail : resolver._onQuantitativeFail,
-
-    }
-
-    let it = _.resolve.head( Defaults, [ o2 ] );
-    it.iterator.resolveExtraOptions = o;
-
-    it.start();
-
-    return it.result;
-  }
-  catch( err )
-  {
-    throw resolver.errResolving
-    ({
-      selector : o.selector,
-      rop : o,
-      err,
-    });
-  }
-
-  return result;
-}
-
-var defaults = _resolveQualifiedAct.defaults = Defaults;
+// function _resolveQualifiedAct( o ) /* xxx : remove? */
+// {
+//   let it = this;
+//   let resolver = this; /* xxx : remove */
+//   let result;
+//
+//   _.assert( arguments.length === 1 );
+//   _.assert( _.arrayIs( o.visited ) );
+//
+//   /* */
+//
+//   try
+//   {
+//
+//     // o.Looker = o.Looker || Self;
+//     //
+//     // let o2 =
+//     // {
+//     //
+//     //   Looker : o.Looker,
+//     //
+//     //   src : o.src,
+//     //   selector : o.selector,
+//     //   preservingIteration : o.preservingIteration,
+//     //   missingAction : o.missingAction,
+//     //   recursive : 32,
+//     //
+//     //   onSelectorReplicate : resolver._onSelectorReplicate,
+//     //   onSelectorDown : resolver._onSelectorDown,
+//     //   onUpBegin : resolver._onUpBegin,
+//     //   onUpEnd : resolver._onUpEnd,
+//     //   onDownEnd : resolver._onDownEnd,
+//     //   onQuantitativeFail : resolver._onQuantitativeFail,
+//     //
+//     // }
+//     //
+//     // debugger;
+//     // let it = _.resolver.resolve.head( Defaults, [ o2 ] );
+//     // it.iterator.resolveExtraOptions = o;
+//     // it.perform();
+//     // debugger;
+//
+//     debugger;
+//     it.perform();
+//
+//     return it.result;
+//   }
+//   catch( err )
+//   {
+//     throw resolver.errResolving
+//     ({
+//       selector : o.selector,
+//       rop : o,
+//       err,
+//     });
+//   }
+//
+//   return result;
+// }
+//
+// var defaults = _resolveQualifiedAct.defaults = Defaults;
 
 // --
 // relations
 // --
 
-_.assert( !!_.resolver.Resolver.ResolverSelector );
-let ResolverExtraSelector = _.looker.make
-({
-  name : 'ResolverExtraSelector',
-  parent : _.resolver.Resolver.ResolverSelector,
-  defaults :
-  {
-    defaultResourceKind : null,
-    prefixlessAction : null,
-    singleUnwrapping : null,
-    mapValsUnwrapping : null,
-    mapFlattening : null,
-    arrayWrapping : null,
-    arrayFlattening : null,
-    Resolver : null,
-  },
-});
-
-let functionSymbol = Symbol.for( 'function' );
-let Looker =
+let Common =
 {
-
-  name : 'resolver',
-  shortName : 'resolver',
 
   // parser
 
@@ -1011,15 +1148,85 @@ let Looker =
 
   // resolve
 
+  head,
+  perform,
+  performMaking : resolveQualified,
+  optionsFromArguments,
+  optionsForm,
+  optionsToIteration,
+  optionsForSelectFrom,
+
   resolveQualified,
   resolveQualifiedMaybe,
-  _resolveQualifiedAct,
+  // _resolveQualifiedAct,
 
-  /* xxx : uncomment */
-  // head,
-  makeAndLook : resolveQualified,
+}
 
-  ResolverSelector : ResolverExtraSelector,
+_.assert( !!_.resolver.Resolver.ResolverSelector );
+let ResolverExtraSelector = _.looker.define
+({
+  name : 'ResolverExtraSelector',
+  parent : _.resolver.Resolver.ResolverSelector,
+  defaults :
+  {
+    defaultResourceKind : null,
+    prefixlessAction : null,
+    singleUnwrapping : null,
+    mapValsUnwrapping : null,
+    mapFlattening : null,
+    arrayWrapping : null,
+    arrayFlattening : null,
+    Resolver : null,
+  },
+  defaultsSubtraction :
+  {
+    onUpBegin : null,
+    onUpEnd : null,
+    onDownEnd : null,
+    onQuantitativeFail : null,
+  },
+  looker :
+  {
+
+    optionsToIteration : optionsToIterationOfSelector,
+
+    onSelectorReplicate : _onSelectorReplicate,
+    onSelectorDown : _onSelectorDown,
+    onUpBegin : _onUpBegin,
+    onUpEnd : _onUpEnd,
+    onDownEnd : _onDownEnd,
+    onQuantitativeFail : _onQuantitativeFail,
+
+    _onSelectorReplicate,
+    _onSelectorDown,
+    _onUpBegin,
+    _onUpEnd,
+    _onDownEnd,
+    _onQuantitativeFail,
+
+  }
+});
+
+_.assert( ResolverExtraSelector._onSelectorReplicate === _onSelectorReplicate );
+
+let functionSymbol = Symbol.for( 'function' );
+let Looker =
+{
+
+  name : 'resolver',
+  shortName : 'resolver',
+
+  ... Common,
+
+  onSelectorReplicate : _onSelectorReplicate,
+  onSelectorDown : _onSelectorDown,
+  onUpBegin : _onUpBegin,
+  onUpEnd : _onUpEnd,
+  onDownEnd : _onDownEnd,
+  onQuantitativeFail : _onQuantitativeFail,
+
+  // ResolverSelector : ResolverExtraSelector,
+  // ResolverExtraSelector,
 
 }
 
@@ -1039,7 +1246,7 @@ let IterationPreserve =
   isFunction : null,
 }
 
-let ResolverExtraReplicator = _.looker.make
+let ResolverExtraReplicator = _.looker.define
 ({
   name : 'ResolverExtra',
   parent : _.resolver.Resolver,
@@ -1050,71 +1257,43 @@ let ResolverExtraReplicator = _.looker.make
   iterationPreserve : IterationPreserve,
 });
 
+//
+
+ResolverExtraReplicator.ResolverSelector = ResolverExtraSelector;
+ResolverExtraReplicator.ResolverReplicator = ResolverExtraReplicator;
+
+ResolverExtraSelector.ResolverSelector = ResolverExtraSelector;
+ResolverExtraSelector.ResolverReplicator = ResolverExtraReplicator;
+
+// ResolverExtraReplicator.ResolverSelector = ResolverExtraSelector;
+// ResolverExtraReplicator.ResolverExtraSelector = ResolverExtraSelector;
+// ResolverExtraReplicator.ResolverExtra = ResolverExtraReplicator;
+// ResolverExtraReplicator.ResolverExtraReplicator = ResolverExtraReplicator;
+//
+// ResolverExtraSelector.ResolverSelector = ResolverExtraSelector;
+// ResolverExtraSelector.ResolverExtraSelector = ResolverExtraSelector;
+// ResolverExtraSelector.ResolverExtra = ResolverExtraReplicator;
+// ResolverExtraSelector.ResolverExtraReplicator = ResolverExtraReplicator;
+
 /* xxx : pass defaults? */
 const Self = ResolverExtraReplicator;
 _.assert( ResolverExtraReplicator.Iterator.resolveExtraOptions !== undefined );
 
 //
 
-// let functionSymbol = Symbol.for( 'function' );
 let ResolverExtension =
 {
 
-  name : 'resolver',
-  shortName : 'resolver',
+  ... _.resolver,
 
-  // parser
+  name : 'resolver2',
+  shortName : 'resolver2',
 
-  strRequestParse,
+  ... Common,
 
-  _selectorIs,
-  selectorIs,
-  selectorIsComposite,
-  _selectorShortSplit,
-  selectorShortSplit,
-  selectorLongSplit,
-  selectorParse,
-  selectorStr,
-  selectorNormalize,
-
-  // handler
-
-  _onSelectorReplicate,
-  _onSelectorReplicateComposite,
-  _onSelectorDown,
-  _onUpBegin,
-  _onUpEnd,
-  _onDownEnd,
-  _onQuantitativeFail,
-
-  //
-
-  _arrayFlatten,
-  _arrayWrap,
-  _mapsFlatten,
-  _mapValsUnwrap,
-  _singleUnwrap,
-
-  _queryParse,
-  _resourceMapSelect,
-
-  // function
-
-  _functionStringsJoinUp,
-  _functionStringsJoinDown,
-
-  // err
-
-  errResolving,
-  errResolvingThrow,
-
-  // resolve
-
-  resolveQualified,
-  resolveQualifiedMaybe,
-  _resolveQualifiedAct,
-
+  Looker : ResolverExtraReplicator,
   ResolverExtra : ResolverExtraReplicator,
+  ResolverSelector : ResolverExtraSelector,
   ResolverExtraReplicator,
   ResolverExtraSelector,
 
@@ -1126,13 +1305,13 @@ let ToolsExtension =
   // ResolverExtra : ResolverExtraReplicator,
   // ResolverExtraReplicator,
   // ResolverExtraSelector,
-  resolveQualified,
-  resolveQualifiedMaybe,
+  // resolveQualified,
+  // resolveQualifiedMaybe,
 
 }
 
 _.mapSupplement( _, ToolsExtension );
-_.mapExtend( _.resolver, ResolverExtension );
+_.mapExtend( _.resolver2, ResolverExtension );
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _;

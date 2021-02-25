@@ -25,7 +25,7 @@ let _ = _global_.wTools;
 function selectorParse( test )
 {
   let self = this;
-  let r = _.resolver;
+  let r = _.resolver2;
 
   test.case = 'single inline, single split';
   var expected = [ [ [ 'a', '::', 'b' ] ] ]
@@ -134,7 +134,7 @@ function selectorParse( test )
 function selectorNormalize( test )
 {
   let self = this;
-  let r = _.resolver;
+  let r = _.resolver2;
 
   test.case = 'single inline, single split';
   var expected = '{a::b}';
@@ -185,6 +185,58 @@ function selectorNormalize( test )
 
 //
 
+function iteratorResult( test )
+{
+
+  var src =
+  {
+    a : { map : { name : 'name1' }, value : 13 },
+    b : { b1 : 1, b2 : 'b2' },
+    c : { c1 : 1, c2 : 'c2' },
+  }
+
+  /* */
+
+  test.case = 'control';
+  var expected = [ 'b2', { a : 'c', b : 'name1' } ];
+  var got = _.resolver2.resolveQualified( src, [ '::b/b2', { a : 'c', b : '::a/map' } ] );
+  test.identical( got, expected );
+  test.true( got[ 0 ] === src.b.b2 );
+
+  var expected =
+  {
+    a : { map : { name : 'name1' }, value : 13 },
+    b : { b1 : 1, b2 : 'b2' },
+    c : { c1 : 1, c2 : 'c2' },
+  }
+  test.identical( src, expected );
+
+  /* */
+
+  test.case = 'iterator.result';
+  var expected = [ 'b2', { a : 'c', b : 'name1' } ];
+  var it = _.resolver2.resolveQualified.head( _.resolver2.resolveQualified, [ src, [ '::b/b2', { a : 'c', b : '::a/map' } ] ] );
+  var got = it.perform();
+  test.true( got === it );
+  test.identical( it.result, expected );
+  var got = it.result;
+  test.identical( got, expected );
+  test.true( got[ 0 ] === src.b.b2 );
+
+  var expected =
+  {
+    a : { map : { name : 'name1' }, value : 13 },
+    b : { b1 : 1, b2 : 'b2' },
+    c : { c1 : 1, c2 : 'c2' },
+  }
+  test.identical( src, expected );
+
+  /* - */
+
+}
+
+//
+
 function trivialResolve( test )
 {
 
@@ -199,14 +251,32 @@ function trivialResolve( test )
     },
     val2 : 'here',
   }
+  var exp = 'here';
+  var got = _.resolver2.resolveQualified
+  ({
+    src,
+    selector : '::val2',
+  });
+  test.identical( got, exp );
+
+  /* */
+
+  test.case = 'composite';
+  var src =
+  {
+    dir :
+    {
+      val1 : 'Hello'
+    },
+    val2 : 'here',
+  }
   var exp = 'Hello from here!';
-  var got = _.resolver.resolveQualified
+  var got = _.resolver2.resolveQualified
   ({
     src,
     selector : '{::dir/val1} from {::val2}!',
   });
   test.identical( got, exp );
-  console.log( got );
 
   /* */
 
@@ -220,9 +290,8 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver.resolveQualified( src, '{::dir/val1} from {::val2}!' );
+  var got = _.resolver2.resolveQualified( src, '{::dir/val1} from {::val2}!' );
   test.identical( got, exp );
-  console.log( got );
 
   /* */
 
@@ -245,7 +314,7 @@ function qualifiedResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver.resolveQualified
+  var got = _.resolver2.resolveQualified
   ({
     src,
     selector : '{dir::val1} from {val2::.}!',
@@ -278,7 +347,7 @@ function qualifiedResolve( test )
     },
   }
   var exp = 'user1 - 13 !';
-  var got = _.resolver.resolveQualified
+  var got = _.resolver2.resolveQualified
   ({
     src,
     selector : '{result::dir/userX} !',
@@ -309,7 +378,7 @@ let Self =
 
     selectorParse,
     selectorNormalize,
-
+    iteratorResult,
     trivialResolve,
     qualifiedResolve,
 
