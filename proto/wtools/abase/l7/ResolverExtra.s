@@ -835,9 +835,12 @@ function perform() /* xxx : rename to body? */
 
   it.performBegin();
 
+  // _.debugger;
+
   try
   {
-    Parent.perform.call( it );
+    it.iterate();
+    // Parent.perform.call( it );
   }
   catch( err )
   {
@@ -848,6 +851,8 @@ function perform() /* xxx : rename to body? */
       err,
     });
   }
+
+  // _.debugger;
 
   it.performEnd();
 
