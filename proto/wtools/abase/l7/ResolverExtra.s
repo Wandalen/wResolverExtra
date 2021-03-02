@@ -74,12 +74,12 @@ let Defaults =
 
 }
 
-delete Defaults.onSelectorReplicate;
-delete Defaults.onSelectorDown;
-delete Defaults.onUpBegin;
-delete Defaults.onUpEnd;
-delete Defaults.onDownEnd;
-delete Defaults.onQuantitativeFail;
+// delete Defaults.onSelectorReplicate;
+// delete Defaults.onSelectorDown;
+// delete Defaults.onUpBegin;
+// delete Defaults.onUpEnd;
+// delete Defaults.onDownEnd;
+// delete Defaults.onQuantitativeFail;
 
 // --
 // parser
@@ -87,9 +87,11 @@ delete Defaults.onQuantitativeFail;
 
 function strRequestParse( srcStr )
 {
-  let resolver = this;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
 
-  if( resolver._selectorIs( srcStr ) )
+  if( /*resolver*/it._selectorIs( srcStr ) )
   {
     let left, right;
     let splits = _.strSplit( srcStr );
@@ -100,7 +102,7 @@ function strRequestParse( srcStr )
     for( let s = splits.length - 1 ; s >= 0 ; s-- )
     {
       let split = splits[ s ];
-      if( resolver._selectorIs( split ) )
+      if( /*resolver*/it._selectorIs( split ) )
       {
         left = splits.slice( 0, s+1 ).join( ' ' );
         right = splits.slice( s+1 ).join( ' ' );
@@ -252,7 +254,9 @@ defaults.defaultResourceKind = null;
 
 function selectorParse( o )
 {
-  let resolver = this;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
   let result = [];
 
   if( _.strIs( o ) )
@@ -290,11 +294,11 @@ function selectorParse( o )
 
   splits = _.strSplitsUngroupedJoin( splits );
 
-  if( splits.length === 1 && _.strIs( splits[ 0 ] ) && resolver.selectorIs( splits[ 0 ] ) )
+  if( splits.length === 1 && _.strIs( splits[ 0 ] ) && /*resolver*/it.selectorIs( splits[ 0 ] ) )
   {
     let o2 = _.mapExtend( null, o );
     o2.selector = splits[ 0 ];
-    splits[ 0 ] = resolver.selectorLongSplit( o2 );
+    splits[ 0 ] = /*resolver*/it.selectorLongSplit( o2 );
   }
 
   return splits;
@@ -308,7 +312,9 @@ defaults.defaultResourceKind = null;
 
 function selectorStr( parsedSelector )
 {
-  let resolver = this;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
 
   if( _.strIs( parsedSelector ) )
   return parsedSelector;
@@ -345,13 +351,15 @@ function selectorStr( parsedSelector )
 
 function selectorNormalize( src )
 {
-  let resolver = this;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
 
-  if( !resolver.selectorIs( src ) )
+  if( !/*resolver*/it.selectorIs( src ) )
   return src;
 
-  let parsed = resolver.selectorParse( src );
-  let result = resolver.selectorStr( parsed );
+  let parsed = /*resolver*/it.selectorParse( src );
+  let result = /*resolver*/it.selectorStr( parsed );
 
   return result;
 }
@@ -363,38 +371,39 @@ function selectorNormalize( src )
 function _onSelectorReplicate( o )
 {
   let it = this;
-  let rop = it.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = it.iterator;
+  //let resolver = /*rop*/rit.Resolver;
   let selector = o.selector;
 
   if( !_.strIs( selector ) )
   return;
 
-  if( resolver._selectorIs( selector ) )
-  return resolver._onSelectorReplicateComposite.call( it, o );
+  if( /*resolver*/it._selectorIs( selector ) )
+  return /*resolver*/it._onSelectorReplicateComposite.call( it, o );
 
   if( o.counter > 0 )
   return;
 
-  if( rop.prefixlessAction === 'default' && !it.composite )
+  if( /*rop*/rit.prefixlessAction === 'default' && !it.composite )
   {
     return selector;
   }
-  else if( rop.prefixlessAction === 'resolved' || rop.prefixlessAction === 'default' )
+  else if( /*rop*/rit.prefixlessAction === 'resolved' || /*rop*/rit.prefixlessAction === 'default' )
   {
     return;
   }
-  else if( rop.prefixlessAction === 'throw' || rop.prefixlessAction === 'error' )
+  else if( /*rop*/rit.prefixlessAction === 'throw' || /*rop*/rit.prefixlessAction === 'error' )
   {
     debugger;
     it.iterator.continue = false;
-    let err = resolver.errResolving
+    let err = /*resolver*/it.errResolving
     ({
       selector,
-      rop,
+      // rop,
       err : _.ErrorLooking( 'Resource selector should have prefix' ),
     });
-    if( rop.prefixlessAction === 'throw' )
+    if( /*rop*/rit.prefixlessAction === 'throw' )
     throw err;
     it.dst = err;
     return;
@@ -416,12 +425,13 @@ let _onSelectorReplicateComposite = _.resolver.functor.onSelectorReplicateCompos
 function _onSelectorDown()
 {
   let it = this;
-  let rop = it.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = it.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
-  resolver._arrayFlatten.call( it );
+  /*resolver*/it._arrayFlatten.call( it );
 
-  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.composite )
+  if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolver2.compositeSymbol )
   {
 
     for( let d = 0 ; d < it.dst.length ; d++ )
@@ -439,26 +449,28 @@ function _onSelectorDown()
 function _onUpBegin()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  /* let rop ** = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions */
+  //let resolver = /*rop*/rit.Resolver;
   let doing = true;
 
   if( !it.dstWritingDown )
   return;
 
-  resolver._queryParse.call( it );
-  resolver._resourceMapSelect.call( it );
+  /*resolver*/it._queryParse.call( it );
+  /*resolver*/it._resourceMapSelect.call( it );
 
-  let recursing = _.strIs( it.dst ) && resolver._selectorIs( it.dst );
+  let recursing = _.strIs( it.dst ) && /*resolver*/it._selectorIs( it.dst );
   if( recursing )
   {
 
     debugger;
     /* qqq : cover please */
-    let o2 = _.mapOnly( it, resolver.resolve.defaults );
+    let o2 = _.mapOnly( it, /*resolver*/it.resolve.defaults );
     o2.selector = it.dst;
     o2.src = it.iterator.src;
-    it.src = resolver.resolve( o2 ); /* zzz : write result of selection to dst, never to src? */
+    it.src = /*resolver*/it.resolve( o2 ); /* zzz : write result of selection to dst, never to src? */
 
   }
 
@@ -469,8 +481,8 @@ function _onUpBegin()
 function _onUpEnd()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   if( !it.dstWritingDown )
   return;
@@ -482,8 +494,11 @@ function _onUpEnd()
 function _onDownEnd()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+
+  _.assert( !!it.replicateIteration );
 
   if( !it.dstWritingDown )
   return;
@@ -502,8 +517,9 @@ function _onDownEnd()
 function _onQuantitativeFail( err )
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   debugger;
 
@@ -540,13 +556,14 @@ function _onQuantitativeFail( err )
 function _arrayFlatten()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
   let currentModule = it.currentModule;
 
-  _.assert( _.objectIs( rop ) );
+  // _.assert( _.objectIs( rop ) );
 
-  if( !rop.arrayFlattening || !_.arrayIs( it.dst ) )
+  if( !/*rop*/rit.arrayFlattening || !_.arrayIs( it.dst ) )
   return;
 
   it.dst = _.arrayFlattenDefined( it.dst );
@@ -558,10 +575,11 @@ function _arrayFlatten()
 function _arrayWrap( result )
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
-  if( !rop.arrayWrapping )
+  if( !/*rop*/rit.arrayWrapping )
   return;
 
   if( !_.mapIs( it.dst ) )
@@ -574,10 +592,11 @@ function _arrayWrap( result )
 function _mapsFlatten()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
-  if( !rop.mapFlattening || !_.mapIs( it.dst ) )
+  if( !/*rop*/rit.mapFlattening || !_.mapIs( it.dst ) )
   return;
 
   it.dst = _.mapsFlatten([ it.dst ]);
@@ -589,12 +608,12 @@ function _mapsFlatten()
 function _mapValsUnwrap()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
+  // _.debugger;
 
-  _.debugger;
-
-  if( !rop.mapValsUnwrapping )
+  if( !/*rop*/rit.mapValsUnwrapping )
   return;
   if( !_.mapIs( it.dst ) )
   return;
@@ -609,10 +628,11 @@ function _mapValsUnwrap()
 function _singleUnwrap()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
-  if( !rop.singleUnwrapping )
+  if( !/*rop*/rit.singleUnwrapping )
   return;
 
   if( _.any( it.dst, ( e ) => _.mapIs( e ) || _.arrayIs( e ) ) )
@@ -636,16 +656,17 @@ function _singleUnwrap()
 function _queryParse()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   if( !it.selector )
   return;
 
-  let splits = resolver.selectorShortSplit
+  let splits = /*resolver*/it.selectorShortSplit
   ({
     selector : it.selector,
-    defaultResourceKind : rop.defaultResourceKind,
+    defaultResourceKind : /*rop*/rit.defaultResourceKind,
   });
 
   it.parsedSelector = Object.create( null );
@@ -667,8 +688,9 @@ function _queryParse()
 function _resourceMapSelect()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
-  let resolver = rop.Resolver;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
+  //let resolver = /*rop*/rit.Resolver;
 
   if( it.selector === undefined || it.selector === null )
   return;
@@ -684,7 +706,7 @@ function _resourceMapSelect()
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
-      resolver._functionStringsJoinUp.call( it );
+      /*resolver*/it._functionStringsJoinUp.call( it );
     }
     else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
@@ -709,7 +731,8 @@ function _resourceMapSelect()
 function _functionStringsJoinUp()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
 
   _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
 
@@ -730,7 +753,8 @@ function _functionStringsJoinUp()
 function _functionStringsJoinDown()
 {
   let it = this;
-  let rop = it.resolveExtraOptions ? it.resolveExtraOptions : it.replicateIteration.resolveExtraOptions;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  // let rop = rit.iterator;
 
   if( !_.arrayIs( it.src ) || !it.src[ functionSymbol ] )
   return;
@@ -753,19 +777,21 @@ function _functionStringsJoinDown()
 
 function errResolving( o )
 {
-  let resolver = this;
+  let it = this;
+  let rit = it.replicateIteration ? it.replicateIteration : it;
+  //let resolver = this;
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
   debugger;
   /* xxx : tag error */
   /* xxx : avoid recreation of error */
-  return _.err( 'Failed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
+  return _.err( 'Failed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err ); /* xxx : use _.ct? */
 }
 
 errResolving.defaults =
 {
   selector : null,
-  rop : null,
+  // rop : null,
   err : null,
 }
 
@@ -773,7 +799,7 @@ errResolving.defaults =
 
 function errResolvingThrow( o )
 {
-  let resolver = this;
+  //let resolver = this;
   _.assertRoutineOptions( errResolvingThrow, arguments );
   _.assert( arguments.length === 1 );
   if( o.missingAction === 'undefine' )
@@ -781,10 +807,10 @@ function errResolvingThrow( o )
 
   debugger;
 
-  let err = resolver.errResolving
+  let err = /*resolver*/it.errResolving
   ({
     selector : o.selector,
-    rop : o.rop,
+    // rop : o.rop,
     err : o.err,
   });
 
@@ -799,7 +825,7 @@ errResolvingThrow.defaults =
 {
   missingAction : null,
   selector : null,
-  rop : null,
+  // rop : null,
   err : null,
 }
 
@@ -820,7 +846,7 @@ function head( routine, args )
   else
   _.routineOptionsPreservingUndefines( null, o, routine );
   o.Looker.optionsForm( routine, o );
-  o.optionsForSelect = o.Looker.optionsForSelectFrom( o );
+  o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
   let it = o.Looker.optionsToIteration( o );
   return it;
 }
@@ -847,7 +873,7 @@ function perform() /* xxx : rename to body? */
     throw it.errResolving
     ({
       selector : it.selector,
-      rop : it,
+      // rop : it,
       err,
     });
   }
@@ -870,7 +896,8 @@ function performBegin()
   _.assert( !!it.Resolver );
   _.assert( arguments.length === 0 );
   _.assert( _.arrayIs( it.visited ) );
-  _.assert( !!it.resolveExtraOptions );
+  // _.assert( !!it.resolveExtraOptions );
+  _.assert( it.resolveExtraOptions === undefined );
 
   _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
   _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
@@ -894,7 +921,7 @@ function performEnd()
     result = it.errResolving
     ({
       selector : it.selector,
-      rop : it,
+      // rop : it,
       err : _.ErrorLooking( it.selector, 'was not found' ),
     })
   }
@@ -905,21 +932,10 @@ function performEnd()
     ({
       missingAction : it.missingAction,
       selector : it.selector,
-      rop : it,
+      // rop : it,
       err : result,
     });
   }
-
-  // let it2 = /* xxx : remove? */
-  // {
-  //   dst : result,
-  //   resolveExtraOptions : it,
-  // }
-  //
-  // it._mapsFlatten.call( it2 );
-  // it._mapValsUnwrap.call( it2 );
-  // it._singleUnwrap.call( it2 );
-  // it._arrayWrap.call( it2 );
 
   it._mapsFlatten();
   it._mapValsUnwrap();
@@ -977,7 +993,7 @@ function optionsToIteration( o )
 {
   let it = Parent.optionsToIteration.call( this, o );
 
-  it.iterator.resolveExtraOptions = o; /* xxx */
+  // it.iterator.resolveExtraOptions = o; /* xxx */
 
   _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
   _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
@@ -991,10 +1007,19 @@ function optionsToIteration( o )
 
 //
 
-function optionsForSelectFrom( o )
+function selectorOptionsForSelectFrom( o )
 {
   let it = this;
-  let o2 = Parent.optionsForSelectFrom.call( it, o );
+
+  let o2 = Parent.selectorOptionsForSelectFrom.call( it, o );
+
+  // _.assert( !!o.onSelectorReplicate );
+  // _.assert( !!o.onSelectorDown );
+  _.assert( !!o2.onUpBegin );
+  _.assert( !!o2.onUpEnd );
+  _.assert( !!o2.onDownEnd );
+  _.assert( !!o2.onQuantitativeFail );
+
   return o2;
 }
 
@@ -1005,15 +1030,18 @@ function optionsToIterationOfSelector( o )
 
   _.assert( o.onSelectorReplicate === undefined );
   _.assert( o.onSelectorDown === undefined );
-  _.assert( o.onUpBegin === undefined );
-  _.assert( o.onUpEnd === undefined );
-  _.assert( o.onDownEnd === undefined );
-  _.assert( o.onQuantitativeFail === undefined );
+  _.assert( o.onUpBegin !== undefined );
+  _.assert( o.onUpEnd !== undefined );
+  _.assert( o.onDownEnd !== undefined );
+  _.assert( o.onQuantitativeFail !== undefined );
+  // _.assert( o.onQuantitativeFail === undefined );
 
   let it = Parent.ResolverSelector.optionsToIteration.call( this, o );
 
-  _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
-  _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
+  _.assert( it.onSelectorReplicate === undefined );
+  _.assert( it.onSelectorDown === undefined );
+  // _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
+  // _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
   _.assert( it.onUpBegin === it.Looker._onUpBegin );
   _.assert( it.onUpEnd === it.Looker._onUpEnd );
   _.assert( it.onDownEnd === it.Looker._onDownEnd );
@@ -1031,11 +1059,19 @@ function resolveQualified_head( routine, args )
 
 //
 
+/* xxx : rename */
 function resolveQualified_body( it )
 {
   it.perform();
   return it.result;
 }
+
+Defaults.onSelectorReplicate = _onSelectorReplicate;
+Defaults.onSelectorDown = _onSelectorDown;
+Defaults.onUpBegin = _onUpBegin;
+Defaults.onUpEnd = _onUpEnd;
+Defaults.onDownEnd = _onDownEnd;
+Defaults.onQuantitativeFail = _onQuantitativeFail;
 
 resolveQualified_body.defaults = Defaults;
 
@@ -1105,11 +1141,11 @@ let Common =
   // perform,
   // performBegin,
   // performEnd,
-  // performMaking : resolveQualified,
+  // exec : resolveQualified,
   // optionsFromArguments,
   // optionsForm,
   // optionsToIteration,
-  // optionsForSelectFrom,
+  // selectorOptionsForSelectFrom,
   // resolveQualified,
   // resolveQualifiedMaybe,
 
@@ -1133,10 +1169,10 @@ let ResolverExtraSelector = _.looker.define
   },
   defaultsSubtraction :
   {
-    onUpBegin : null,
-    onUpEnd : null,
-    onDownEnd : null,
-    onQuantitativeFail : null,
+    // onUpBegin : null,
+    // onUpEnd : null,
+    // onDownEnd : null,
+    // onQuantitativeFail : null,
   },
   looker :
   {
@@ -1144,15 +1180,15 @@ let ResolverExtraSelector = _.looker.define
 
     optionsToIteration : optionsToIterationOfSelector,
 
-    onSelectorReplicate : _onSelectorReplicate,
-    onSelectorDown : _onSelectorDown,
-    onUpBegin : _onUpBegin,
-    onUpEnd : _onUpEnd,
-    onDownEnd : _onDownEnd,
-    onQuantitativeFail : _onQuantitativeFail,
+    // onSelectorReplicate : _onSelectorReplicate,
+    // onSelectorDown : _onSelectorDown,
+    // onUpBegin : _onUpBegin,
+    // onUpEnd : _onUpEnd,
+    // onDownEnd : _onDownEnd,
+    // onQuantitativeFail : _onQuantitativeFail,
 
-    _onSelectorReplicate,
-    _onSelectorDown,
+    // _onSelectorReplicate,
+    // _onSelectorDown,
     _onUpBegin,
     _onUpEnd,
     _onDownEnd,
@@ -1179,20 +1215,20 @@ let ResolverExtraReplicator = _.looker.define
 
     onSelectorReplicate : _onSelectorReplicate,
     onSelectorDown : _onSelectorDown,
-    onUpBegin : _onUpBegin,
-    onUpEnd : _onUpEnd,
-    onDownEnd : _onDownEnd,
-    onQuantitativeFail : _onQuantitativeFail,
+    // onUpBegin : _onUpBegin,
+    // onUpEnd : _onUpEnd,
+    // onDownEnd : _onDownEnd,
+    // onQuantitativeFail : _onQuantitativeFail,
 
     head,
     perform,
     performBegin,
     performEnd,
-    performMaking : resolveQualified,
+    exec : resolveQualified,
     optionsFromArguments,
     optionsForm,
     optionsToIteration,
-    optionsForSelectFrom,
+    selectorOptionsForSelectFrom,
 
     resolveQualified, /* xxx : rename to resolve */
     resolveQualifiedMaybe, /* xxx : rename to resolveMaybe */
@@ -1200,7 +1236,7 @@ let ResolverExtraReplicator = _.looker.define
   },
   iterator :
   {
-    resolveExtraOptions : null,
+    // resolveExtraOptions : null,
   },
   iterationPreserve :
   {
@@ -1218,7 +1254,7 @@ ResolverExtraSelector.ResolverReplicator = ResolverExtraReplicator;
 
 /* xxx : pass defaults? */
 const Self = ResolverExtraReplicator;
-_.assert( ResolverExtraReplicator.Iterator.resolveExtraOptions !== undefined );
+_.assert( ResolverExtraReplicator.IterationPreserve.isFunction !== undefined );
 
 //
 
