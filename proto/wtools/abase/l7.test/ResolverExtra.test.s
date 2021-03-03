@@ -199,7 +199,7 @@ function iteratorResult( test )
 
   test.case = 'control';
   var expected = [ 'b2', { a : 'c', b : 'name1' } ];
-  var got = _.resolver2.resolveQualified( src, [ '::b/b2', { a : 'c', b : '::a/map' } ] );
+  var got = _.resolver2.resolve( src, [ '::b/b2', { a : 'c', b : '::a/map' } ] );
   test.identical( got, expected );
   test.true( got[ 0 ] === src.b.b2 );
 
@@ -215,7 +215,7 @@ function iteratorResult( test )
 
   test.case = 'iterator.result';
   var expected = [ 'b2', { a : 'c', b : 'name1' } ];
-  var it = _.resolver2.resolveQualified.head( _.resolver2.resolveQualified, [ src, [ '::b/b2', { a : 'c', b : '::a/map' } ] ] );
+  var it = _.resolver2.resolve.head( _.resolver2.resolve, [ src, [ '::b/b2', { a : 'c', b : '::a/map' } ] ] );
   var got = it.perform();
   test.true( got === it );
   test.identical( it.result, expected );
@@ -252,7 +252,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'here';
-  var got = _.resolver2.resolveQualified
+  var got = _.resolver2.resolve
   ({
     src,
     selector : '::val2',
@@ -271,7 +271,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver2.resolveQualified
+  var got = _.resolver2.resolve
   ({
     src,
     selector : '{::dir/val1} from {::val2}!',
@@ -290,7 +290,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver2.resolveQualified( src, '{::dir/val1} from {::val2}!' );
+  var got = _.resolver2.resolve( src, '{::dir/val1} from {::val2}!' );
   test.identical( got, exp );
 
   /* */
@@ -314,7 +314,7 @@ function qualifiedResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver2.resolveQualified
+  var got = _.resolver2.resolve
   ({
     src,
     selector : '{dir::val1} from {val2::.}!',
@@ -347,7 +347,7 @@ function qualifiedResolve( test )
     },
   }
   var exp = 'user1 - 13 !';
-  var got = _.resolver2.resolveQualified
+  var got = _.resolver2.resolve
   ({
     src,
     selector : '{result::dir/userX} !',

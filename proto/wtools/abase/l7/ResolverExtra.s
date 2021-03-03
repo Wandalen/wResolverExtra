@@ -1053,7 +1053,7 @@ function optionsToIterationOfSelector( o )
 
 //
 
-function resolveQualified_head( routine, args )
+function resolve_head( routine, args )
 {
   return Self.head( routine, args );
 }
@@ -1061,7 +1061,7 @@ function resolveQualified_head( routine, args )
 //
 
 /* xxx : rename */
-function resolveQualified_body( it )
+function resolve_body( it )
 {
   it.perform();
   return it.result;
@@ -1074,12 +1074,12 @@ Defaults.onUpEnd = _onUpEnd;
 Defaults.onDownEnd = _onDownEnd;
 Defaults.onQuantitativeFail = _onQuantitativeFail;
 
-resolveQualified_body.defaults = Defaults;
+resolve_body.defaults = Defaults;
 
-let resolveQualified = _.routineUnite( resolveQualified_head, resolveQualified_body );
-let resolveQualifiedMaybe = _.routineUnite( resolveQualified_head, resolveQualified_body );
+let resolve = _.routineUnite( resolve_head, resolve_body );
+let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
 
-var defaults = resolveQualifiedMaybe.defaults;
+var defaults = resolveMaybe.defaults;
 defaults.missingAction = 'undefine';
 
 // --
@@ -1136,20 +1136,6 @@ let Common =
   errResolving,
   errResolvingThrow,
 
-  // // resolve
-  //
-  // head,
-  // perform,
-  // performBegin,
-  // performEnd,
-  // exec : resolveQualified,
-  // optionsFromArguments,
-  // optionsForm,
-  // optionsToIteration,
-  // selectorOptionsForSelectFrom,
-  // resolveQualified,
-  // resolveQualifiedMaybe,
-
 }
 
 _.assert( !!_.resolver.Resolver.ResolverSelector );
@@ -1170,10 +1156,6 @@ let ResolverExtraSelector = _.looker.define
   },
   defaultsSubtraction :
   {
-    // onUpBegin : null,
-    // onUpEnd : null,
-    // onDownEnd : null,
-    // onQuantitativeFail : null,
   },
   looker :
   {
@@ -1181,15 +1163,6 @@ let ResolverExtraSelector = _.looker.define
 
     optionsToIteration : optionsToIterationOfSelector,
 
-    // onSelectorReplicate : _onSelectorReplicate,
-    // onSelectorDown : _onSelectorDown,
-    // onUpBegin : _onUpBegin,
-    // onUpEnd : _onUpEnd,
-    // onDownEnd : _onDownEnd,
-    // onQuantitativeFail : _onQuantitativeFail,
-
-    // _onSelectorReplicate,
-    // _onSelectorDown,
     _onUpBegin,
     _onUpEnd,
     _onDownEnd,
@@ -1216,28 +1189,23 @@ let ResolverExtraReplicator = _.looker.define
 
     onSelectorReplicate : _onSelectorReplicate,
     onSelectorDown : _onSelectorDown,
-    // onUpBegin : _onUpBegin,
-    // onUpEnd : _onUpEnd,
-    // onDownEnd : _onDownEnd,
-    // onQuantitativeFail : _onQuantitativeFail,
 
     head,
     perform,
     performBegin,
     performEnd,
-    exec : resolveQualified,
+    exec : resolve,
     optionsFromArguments,
     optionsForm,
     optionsToIteration,
     selectorOptionsForSelectFrom,
 
-    resolveQualified, /* xxx : rename to resolve */
-    resolveQualifiedMaybe, /* xxx : rename to resolveMaybe */
+    resolve, /* xxx : rename to resolve */
+    resolveMaybe, /* xxx : rename to resolveMaybe */
 
   },
   iterator :
   {
-    // resolveExtraOptions : null,
   },
   iterationPreserve :
   {
@@ -1268,8 +1236,8 @@ let ResolverExtension =
   name : 'resolver2',
   shortName : 'resolver2',
 
-  resolveQualified,
-  resolveQualifiedMaybe,
+  resolve,
+  resolveMaybe,
 
   Looker : ResolverExtraReplicator,
   ResolverExtra : ResolverExtraReplicator,
