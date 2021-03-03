@@ -892,6 +892,7 @@ function performBegin()
   let it = this;
   Parent.performBegin.apply( it, arguments );
 
+  _.assert( Object.is( it.originalSrc, it.src ) );
   _.assert( _.arrayIs( it.visited ) );
   _.assert( !!it.Resolver );
   _.assert( arguments.length === 0 );
