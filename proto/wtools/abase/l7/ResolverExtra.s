@@ -70,7 +70,7 @@ let Defaults =
   recursive : 32,
 
   Looker : null,
-  Resolver : null, /* xxx : remove */
+  // Resolver : null, /* xxx : remove */
 
 }
 
@@ -894,7 +894,7 @@ function performBegin()
 
   _.assert( Object.is( it.originalSrc, it.src ) );
   _.assert( _.arrayIs( it.visited ) );
-  _.assert( !!it.Resolver );
+  _.assert( it.Resolver === undefined );
   _.assert( arguments.length === 0 );
   _.assert( _.arrayIs( it.visited ) );
   // _.assert( !!it.resolveExtraOptions );
@@ -975,9 +975,10 @@ function optionsForm( routine, o )
   if( o.visited === null )
   o.visited = [];
 
-  if( o.Resolver === null )
-  o.Resolver = _.resolver2; /* xxx */
+  // if( o.Resolver === null )
+  // o.Resolver = _.resolver2; /* xxx */
 
+  _.assert( o.Resolver === undefined );
   _.assert( o.resolvingRecursive !== undefined );
   _.assert( arguments.length === 2 );
   _.assert( _.longHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
