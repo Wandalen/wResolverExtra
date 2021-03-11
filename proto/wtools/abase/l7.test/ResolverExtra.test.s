@@ -25,7 +25,8 @@ let _ = _global_.wTools;
 function selectorParse( test )
 {
   let self = this;
-  let r = _.resolver2;
+  // let r = _.resolver2;
+  let r = _.resolver2.Looker;
 
   test.case = 'single inline, single split';
   var expected = [ [ [ 'a', '::', 'b' ] ] ]
@@ -134,7 +135,8 @@ function selectorParse( test )
 function selectorNormalize( test )
 {
   let self = this;
-  let r = _.resolver2;
+  // let r = _.resolver2;
+  let r = _.resolver2.Looker;
 
   test.case = 'single inline, single split';
   var expected = '{a::b}';
@@ -359,6 +361,33 @@ function qualifiedResolve( test )
 
 }
 
+//
+
+function globTrivial( test )
+{
+
+  /* */
+
+  test.case = 'trivial';
+  var src =
+  {
+    val1 : 'Hello',
+    val2 : 'here',
+  }
+  var got = _.resolver2.resolve
+  ({
+    src,
+    selector : '*',
+    prefixlessAction : 'default',
+  });
+  var exp = [ 'Hello', 'here' ];
+  test.identical( got, exp );
+  console.log( got );
+
+  /* */
+
+}
+
 // --
 // declare
 // --
@@ -381,6 +410,7 @@ let Self =
     iteratorResult,
     trivialResolve,
     qualifiedResolve,
+    globTrivial,
 
   }
 

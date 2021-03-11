@@ -42,7 +42,7 @@ if( typeof module !== 'undefined' )
 let _global = _global_;
 let _ = _global_.wTools;
 let Parent = _.resolver.Resolver;
-_.resolver2 = _.resolver2 || Object.create( null );
+_.resolver2 = _.resolver2 || Object.create( null ); /* xxx : inherit? */
 _.assert( !!_.resolver.Resolver );
 
 // --
@@ -52,7 +52,8 @@ _.assert( !!_.resolver.Resolver );
 let Defaults =
 {
 
-  ... _.resolver.resolve.defaults,
+  // ... _.resolver.resolve.defaults,
+  ... _.mapExtend( null, _.resolver.Looker.Prime ),
 
   src : null,
   selector : null,
@@ -69,8 +70,15 @@ let Defaults =
 
   recursive : 32,
 
-  Looker : null,
+  // Looker : null,
   // Resolver : null, /* xxx : remove */
+
+  onSelectorReplicate : _onSelectorReplicate,
+  onSelectorDown : _onSelectorDown,
+  onUpBegin : _onUpBegin,
+  onUpEnd : _onUpEnd,
+  onDownEnd : _onDownEnd,
+  onQuantitativeFail : _onQuantitativeFail,
 
 }
 
@@ -254,9 +262,6 @@ defaults.defaultResourceKind = null;
 
 function selectorParse( o )
 {
-  let it = this;
-  let rit = it.replicateIteration ? it.replicateIteration : it;
-  //let resolver = this;
   let result = [];
 
   if( _.strIs( o ) )
@@ -294,11 +299,11 @@ function selectorParse( o )
 
   splits = _.strSplitsUngroupedJoin( splits );
 
-  if( splits.length === 1 && _.strIs( splits[ 0 ] ) && /*resolver*/it.selectorIs( splits[ 0 ] ) )
+  if( splits.length === 1 && _.strIs( splits[ 0 ] ) && /*resolver*/this.selectorIs( splits[ 0 ] ) )
   {
     let o2 = _.mapExtend( null, o );
     o2.selector = splits[ 0 ];
-    splits[ 0 ] = /*resolver*/it.selectorLongSplit( o2 );
+    splits[ 0 ] = /*resolver*/this.selectorLongSplit( o2 );
   }
 
   return splits;
@@ -401,7 +406,7 @@ function _onSelectorReplicate( o )
     ({
       selector,
       // rop,
-      err : _.ErrorLooking( 'Resource selector should have prefix' ),
+      err : _.LookingError( 'Resource selector should have prefix' ),
     });
     if( /*rop*/rit.prefixlessAction === 'throw' )
     throw err;
@@ -833,23 +838,29 @@ errResolvingThrow.defaults =
 // resolve
 // --
 
-function head( routine, args )
-{
-  _.assert( arguments.length === 2 );
-  let o = Self.optionsFromArguments( args );
-  if( _.routineIs( routine ) )
-  o.Looker = o.Looker || routine.defaults.Looker || Self;
-  else
-  o.Looker = o.Looker || routine.Looker || Self;
-  if( _.routineIs( routine ) ) /* zzz : remove "if" later */
-  _.routineOptionsPreservingUndefines( routine, o );
-  else
-  _.routineOptionsPreservingUndefines( null, o, routine );
-  o.Looker.optionsForm( routine, o );
-  o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
-  let it = o.Looker.optionsToIteration( o );
-  return it;
-}
+// /* xxx : remove */
+// function head( routine, args )
+// {
+//   _.assert( arguments.length === 2 );
+//   let o = routine.defaults.Looker.optionsFromArguments( args );
+//   if( _.routineIs( routine ) )
+//   o.Looker = o.Looker || routine.defaults.Looker;
+//   else
+//   o.Looker = o.Looker || routine.Looker;
+//
+//   _.assert( _.routineIs( routine ) || _.auxIs( routine ) );
+//   if( _.routineIs( routine ) ) /* zzz : remove "if" later */
+//   _.assertMapHasOnly( o, routine.defaults );
+//   // _.routineOptionsPreservingUndefines( routine, o );
+//   else if( routine !== null )
+//   _.assertMapHasOnly( o, routine );
+//   // _.routineOptionsPreservingUndefines( null, o, routine );
+//
+//   // o.Looker.optionsForm( routine, o );
+//   o.optionsForSelect = o.Looker.selectorOptionsForSelectFrom( o );
+//   let it = o.Looker.optionsToIteration( null, o );
+//   return it;
+// }
 
 //
 
@@ -892,7 +903,7 @@ function performBegin()
   let it = this;
   Parent.performBegin.apply( it, arguments );
 
-  _.assert( Object.is( it.originalSrc, it.src ) );
+  // _.assert( Object.is( it.originalSrc, it.src ) );
   _.assert( _.arrayIs( it.visited ) );
   _.assert( it.Resolver === undefined );
   _.assert( arguments.length === 0 );
@@ -923,7 +934,7 @@ function performEnd()
     ({
       selector : it.selector,
       // rop : it,
-      err : _.ErrorLooking( it.selector, 'was not found' ),
+      err : _.LookingError( it.selector, 'was not found' ),
     })
   }
 
@@ -978,6 +989,7 @@ function optionsForm( routine, o )
   // if( o.Resolver === null )
   // o.Resolver = _.resolver2; /* xxx */
 
+  _.assert( o.iteratorProper( o ) );
   _.assert( o.Resolver === undefined );
   _.assert( o.resolvingRecursive !== undefined );
   _.assert( arguments.length === 2 );
@@ -991,12 +1003,13 @@ function optionsForm( routine, o )
 
 //
 
-function optionsToIteration( o )
+function optionsToIteration( iterator, o )
 {
-  let it = Parent.optionsToIteration.call( this, o );
+  let it = Parent.optionsToIteration.call( this, iterator, o );
 
   // it.iterator.resolveExtraOptions = o; /* xxx */
 
+  _.assert( arguments.length === 2 );
   _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
   _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
   _.assert( it.onUpBegin === it.Looker._onUpBegin );
@@ -1027,9 +1040,10 @@ function selectorOptionsForSelectFrom( o )
 
 //
 
-function optionsToIterationOfSelector( o )
+function optionsToIterationOfSelector( iterator, o )
 {
 
+  _.assert( arguments.length === 2 );
   _.assert( o.onSelectorReplicate === undefined );
   _.assert( o.onSelectorDown === undefined );
   _.assert( o.onUpBegin !== undefined );
@@ -1038,7 +1052,7 @@ function optionsToIterationOfSelector( o )
   _.assert( o.onQuantitativeFail !== undefined );
   // _.assert( o.onQuantitativeFail === undefined );
 
-  let it = Parent.ResolverSelector.optionsToIteration.call( this, o );
+  let it = Parent.Selector.optionsToIteration.call( this, iterator, o );
 
   _.assert( it.onSelectorReplicate === undefined );
   _.assert( it.onSelectorDown === undefined );
@@ -1052,36 +1066,36 @@ function optionsToIterationOfSelector( o )
   return it;
 }
 
+// //
 //
-
-function resolve_head( routine, args )
-{
-  return Self.head( routine, args );
-}
-
+// function resolve_head( routine, args )
+// {
+//   return routine.defaults.head( routine, args );
+// }
 //
+// //
+//
+// /* xxx : rename */
+// function resolve_body( it )
+// {
+//   it.perform();
+//   return it.result;
+// }
 
-/* xxx : rename */
-function resolve_body( it )
-{
-  it.perform();
-  return it.result;
-}
+// Defaults.onSelectorReplicate = _onSelectorReplicate;
+// Defaults.onSelectorDown = _onSelectorDown;
+// Defaults.onUpBegin = _onUpBegin;
+// Defaults.onUpEnd = _onUpEnd;
+// Defaults.onDownEnd = _onDownEnd;
+// Defaults.onQuantitativeFail = _onQuantitativeFail;
 
-Defaults.onSelectorReplicate = _onSelectorReplicate;
-Defaults.onSelectorDown = _onSelectorDown;
-Defaults.onUpBegin = _onUpBegin;
-Defaults.onUpEnd = _onUpEnd;
-Defaults.onDownEnd = _onDownEnd;
-Defaults.onQuantitativeFail = _onQuantitativeFail;
+// resolve_body.defaults = Defaults;
 
-resolve_body.defaults = Defaults;
-
-let resolve = _.routineUnite( resolve_head, resolve_body );
-let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
-
-var defaults = resolveMaybe.defaults;
-defaults.missingAction = 'undefine';
+// let resolve = _.routineUnite( resolve_head, resolve_body );
+// let resolveMaybe = _.routineUnite( resolve_head, resolve_body );
+//
+// var defaults = resolveMaybe.defaults;
+// defaults.missingAction = 'undefine';
 
 // --
 // relations
@@ -1139,11 +1153,12 @@ let Common =
 
 }
 
-_.assert( !!_.resolver.Resolver.ResolverSelector );
-let ResolverExtraSelector = _.looker.define
+_.assert( !!_.resolver.Resolver.Selector );
+// let ResolverExtraSelector = _.looker.classDefine
+let ResolverExtraSelector =
 ({
   name : 'ResolverExtraSelector',
-  parent : _.resolver.Resolver.ResolverSelector,
+  parent : _.resolver.Resolver.Selector,
   defaults :
   {
     defaultResourceKind : null,
@@ -1155,9 +1170,9 @@ let ResolverExtraSelector = _.looker.define
     arrayFlattening : null,
     Resolver : null,
   },
-  defaultsSubtraction :
-  {
-  },
+  // defaultsSubtraction :
+  // {
+  // },
   looker :
   {
     ... Common,
@@ -1172,14 +1187,15 @@ let ResolverExtraSelector = _.looker.define
   }
 });
 
-_.assert( ResolverExtraSelector._onSelectorReplicate === _onSelectorReplicate );
+// _.assert( ResolverExtraSelector._onSelectorReplicate === _onSelectorReplicate );
 _.assert( !!_.resolver.Resolver );
 
-let ResolverExtraReplicator = _.looker.define
+// let ResolverExtraReplicator = _.looker.classDefine
+let ResolverExtraReplicator =
 ({
   name : 'ResolverExtra',
   parent : _.resolver.Resolver,
-  // defaults : Defaults, /* xxx */
+  defaults : Defaults, /* xxx */
   looker :
   {
 
@@ -1191,18 +1207,18 @@ let ResolverExtraReplicator = _.looker.define
     onSelectorReplicate : _onSelectorReplicate,
     onSelectorDown : _onSelectorDown,
 
-    head,
+    // head,
     perform,
     performBegin,
     performEnd,
-    exec : resolve,
+    // exec : resolve,
     optionsFromArguments,
     optionsForm,
     optionsToIteration,
     selectorOptionsForSelectFrom,
 
-    resolve, /* xxx : rename to resolve */
-    resolveMaybe, /* xxx : rename to resolveMaybe */
+    // resolve, /* xxx : rename to resolve */
+    // resolveMaybe, /* xxx : rename to resolveMaybe */
 
   },
   iterator :
@@ -1216,15 +1232,34 @@ let ResolverExtraReplicator = _.looker.define
 
 //
 
-ResolverExtraReplicator.ResolverSelector = ResolverExtraSelector;
-ResolverExtraReplicator.ResolverReplicator = ResolverExtraReplicator;
+let Resolver2 = _.resolver.classDefine
+({
+  selector : ResolverExtraSelector,
+  replicator : ResolverExtraReplicator,
+});
 
-ResolverExtraSelector.ResolverSelector = ResolverExtraSelector;
-ResolverExtraSelector.ResolverReplicator = ResolverExtraReplicator;
+_.assert( Resolver2.Selector._onSelectorReplicate === _onSelectorReplicate ); /* xxx : rename to Selector? */
+
+// ResolverExtraReplicator.Selector = ResolverExtraSelector;
+// ResolverExtraReplicator.Replicator = ResolverExtraReplicator;
+//
+// ResolverExtraSelector.Selector = ResolverExtraSelector;
+// ResolverExtraSelector.Replicator = ResolverExtraReplicator;
+
+//
 
 /* xxx : pass defaults? */
-const Self = ResolverExtraReplicator;
-_.assert( ResolverExtraReplicator.IterationPreserve.isFunction !== undefined );
+const Self = Resolver2;
+_.assert( Resolver2.IterationPreserve.isFunction !== undefined );
+
+// let resolveMaybe = _.routineUnite( Resolver2.exec.head, Resolver2.exec.body );
+// let resolveMaybe = _.routineUnite({ head : Resolver2.exec.head, body : Resolver2.exec.body, strategy : 'inheriting' });
+let resolveMaybe = _.routine.uniteInheriting( Resolver2.exec.head, Resolver2.exec.body );
+var defaults = resolveMaybe.defaults;
+defaults.Looker = defaults;
+defaults.missingAction = 'undefine';
+_.assert( Resolver2.exec.body.defaults.missingAction === 'throw' );
+_.assert( Resolver2.exec.defaults.missingAction === 'throw' );
 
 //
 
@@ -1232,19 +1267,20 @@ let ResolverExtension =
 {
 
   ... _.resolver,
-  ... Common,
+  // ... Common, /* xxx : remove */
 
   name : 'resolver2',
   shortName : 'resolver2',
 
-  resolve,
+  resolve : Resolver2.exec,
   resolveMaybe,
 
-  Looker : ResolverExtraReplicator,
-  ResolverExtra : ResolverExtraReplicator,
-  ResolverSelector : ResolverExtraSelector,
-  ResolverExtraReplicator,
-  ResolverExtraSelector,
+  Looker : Resolver2,
+  Resolver : Resolver2,
+  // ResolverExtra : Resolver2,
+  // Selector : Resolver2.Selector,
+  // ResolverExtraReplicator : Resolver2,
+  // ResolverExtraSelector : Resolver2.Selector,
 
 }
 
