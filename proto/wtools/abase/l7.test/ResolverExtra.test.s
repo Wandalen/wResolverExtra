@@ -25,8 +25,8 @@ let _ = _global_.wTools;
 function selectorParse( test )
 {
   let self = this;
-  // let r = _.resolver2;
-  let r = _.resolver2.Looker;
+  // let r = _.resolverAdv;
+  let r = _.resolverAdv.Looker;
 
   test.case = 'single inline, single split';
   var expected = [ [ [ 'a', '::', 'b' ] ] ]
@@ -135,8 +135,8 @@ function selectorParse( test )
 function selectorNormalize( test )
 {
   let self = this;
-  // let r = _.resolver2;
-  let r = _.resolver2.Looker;
+  // let r = _.resolverAdv;
+  let r = _.resolverAdv.Looker;
 
   test.case = 'single inline, single split';
   var expected = '{a::b}';
@@ -201,7 +201,7 @@ function iteratorResult( test )
 
   test.case = 'control';
   var expected = [ 'b2', { a : 'c', b : 'name1' } ];
-  var got = _.resolver2.resolve( src, [ '::b/b2', { a : 'c', b : '::a/map' } ] );
+  var got = _.resolverAdv.resolve( src, [ '::b/b2', { a : 'c', b : '::a/map' } ] );
   test.identical( got, expected );
   test.true( got[ 0 ] === src.b.b2 );
 
@@ -217,7 +217,7 @@ function iteratorResult( test )
 
   test.case = 'iterator.result';
   var expected = [ 'b2', { a : 'c', b : 'name1' } ];
-  var it = _.resolver2.resolve.head( _.resolver2.resolve, [ src, [ '::b/b2', { a : 'c', b : '::a/map' } ] ] );
+  var it = _.resolverAdv.resolve.head( _.resolverAdv.resolve, [ src, [ '::b/b2', { a : 'c', b : '::a/map' } ] ] );
   var got = it.perform();
   test.true( got === it );
   test.identical( it.result, expected );
@@ -254,7 +254,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'here';
-  var got = _.resolver2.resolve
+  var got = _.resolverAdv.resolve
   ({
     src,
     selector : '::val2',
@@ -273,7 +273,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver2.resolve
+  var got = _.resolverAdv.resolve
   ({
     src,
     selector : '{::dir/val1} from {::val2}!',
@@ -292,7 +292,7 @@ function trivialResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver2.resolve( src, '{::dir/val1} from {::val2}!' );
+  var got = _.resolverAdv.resolve( src, '{::dir/val1} from {::val2}!' );
   test.identical( got, exp );
 
   /* */
@@ -316,7 +316,7 @@ function qualifiedResolve( test )
     val2 : 'here',
   }
   var exp = 'Hello from here!';
-  var got = _.resolver2.resolve
+  var got = _.resolverAdv.resolve
   ({
     src,
     selector : '{dir::val1} from {val2::.}!',
@@ -349,7 +349,7 @@ function qualifiedResolve( test )
     },
   }
   var exp = 'user1 - 13 !';
-  var got = _.resolver2.resolve
+  var got = _.resolverAdv.resolve
   ({
     src,
     selector : '{result::dir/userX} !',
@@ -374,7 +374,7 @@ function globTrivial( test )
     val1 : 'Hello',
     val2 : 'here',
   }
-  var got = _.resolver2.resolve
+  var got = _.resolverAdv.resolve
   ({
     src,
     selector : '*',
