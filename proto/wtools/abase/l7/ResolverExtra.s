@@ -86,7 +86,6 @@ function strRequestParse( srcStr )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  //let resolver = this;
 
   if( it._selectorIs( srcStr ) )
   {
@@ -347,7 +346,6 @@ function selectorNormalize( src )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  //let resolver = this;
 
   if( !it.selectorIs( src ) )
   return src;
@@ -366,8 +364,6 @@ function _onSelectorReplicate( o )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = it.iterator;
-  //let resolver = rit.Resolver;
   let selector = o.selector;
 
   if( !_.strIs( selector ) )
@@ -394,7 +390,6 @@ function _onSelectorReplicate( o )
     let err = it.errResolving
     ({
       selector,
-      // rop,
       err : _.LookingError( 'Resource selector should have prefix' ),
     });
     if( rit.prefixlessAction === 'throw' )
@@ -420,8 +415,6 @@ function _onSelectorDown()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = it.iterator;
-  //let resolver = rit.Resolver;
 
   it._arrayFlatten.call( it );
 
@@ -572,8 +565,6 @@ function _mapsFlatten()
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-  // let rop = rit.iterator;
-  //let resolver = rit.Resolver;
 
   if( !rit.mapFlattening || !_.mapIs( it.dst ) )
   return;
@@ -752,8 +743,7 @@ function errResolving( o )
   debugger;
   /* xxx : tag error */
   /* xxx : avoid recreation of error */
-  return it.errMake( 'Failed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err ); /* xxx : use _.ct? */
-  // return _.err( 'Failed to resolve', _.color.strFormat( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
+  return it.errMake( 'Failed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
 }
 
 errResolving.defaults =
@@ -766,6 +756,8 @@ errResolving.defaults =
 
 function errResolvingThrow( o )
 {
+  let it = this;
+
   _.assertRoutineOptions( errResolvingThrow, arguments );
   _.assert( arguments.length === 1 );
   if( o.missingAction === 'undefine' )
@@ -801,11 +793,8 @@ function perform() /* xxx : rename to body? */
 {
   let it = this;
 
-  /* */
-
   it.performBegin();
 
-  /* xxx : remove try? */
   try
   {
     it.iterate();
@@ -850,9 +839,18 @@ function performBegin()
 
 //
 
+/* qqq : implement good test covering resolving with undefined result */
 function performEnd()
 {
   let it = this;
+
+  it._mapsFlatten();
+  it._mapValsUnwrap();
+  it._singleUnwrap();
+  it._arrayWrap();
+
+  Parent.performEnd.apply( it, arguments );
+
   let result = it.result;
 
   if( result === undefined )
@@ -874,12 +872,6 @@ function performEnd()
     });
   }
 
-  it._mapsFlatten();
-  it._mapValsUnwrap();
-  it._singleUnwrap();
-  it._arrayWrap();
-
-  Parent.performEnd.apply( it, arguments );
   return it;
 }
 
@@ -1041,9 +1033,9 @@ _.assert( !!_.resolver.Resolver.Selector );
 
 //
 
-let ResolverExtraSelector =
+let Selector =
 ({
-  name : 'ResolverExtraSelector',
+  name : 'ResolverSelectorAdv',
   parent : _.resolver.Resolver.Selector,
   prime :
   {
@@ -1072,9 +1064,9 @@ let ResolverExtraSelector =
 
 _.assert( !!_.resolver.Resolver );
 
-let ResolverExtraReplicator =
+let Replicator =
 ({
-  name : 'ResolverExtra',
+  name : 'ResolverAdv',
   parent : _.resolver.Resolver,
   prime : Prime,
   looker :
@@ -1110,11 +1102,11 @@ let ResolverExtraReplicator =
 
 let ResolverAdv = _.resolver.classDefine
 ({
-  selector : ResolverExtraSelector,
-  replicator : ResolverExtraReplicator,
+  selector : Selector,
+  replicator : Replicator,
 });
 
-_.assert( ResolverAdv.Selector._onSelectorReplicate === _onSelectorReplicate ); /* xxx : rename to Selector? */
+_.assert( ResolverAdv.Selector._onSelectorReplicate === _onSelectorReplicate );
 
 //
 

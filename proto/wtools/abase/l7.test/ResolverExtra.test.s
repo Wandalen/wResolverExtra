@@ -388,6 +388,74 @@ function globTrivial( test )
 
 }
 
+//
+
+function optionMissingAction( test ) /* xxx : write */
+{
+
+  /* */
+
+  test.case = `control`;
+
+  var src =
+  {
+    dir :
+    {
+      k1 : '1'
+    },
+    k2 : '2',
+    k3 : 'Composite {dir::k1} text',
+  }
+  var exp = '1 + 2 = 3';
+  debugger;
+  var got = _.resolverAdv.resolve
+  ({
+    src,
+    selector : '{dir::k1} + {k2::.} = 3',
+  });
+  debugger;
+  test.identical( got, exp );
+
+  /* */
+
+  act({ missingAction : 'ignore' });
+  // act({ missingAction : 'undefine' });
+  // act({ missingAction : 'error' });
+  // actThrowing({ missingAction : 'throw' });
+
+  /* - */
+
+  function act( env )
+  {
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, control`;
+
+    // var src =
+    // {
+    //   dir :
+    //   {
+    //     k1 : '1'
+    //   },
+    //   k2 : '2',
+    //   k3 : 'Composite {dir::k1} text',
+    // }
+    // var exp = 'Hello from here!';
+    // var got = _.resolverAdv.resolve
+    // ({
+    //   src,
+    //   selector : '{dir::k1} + {k2::.} = 3',
+    // });
+    // test.identical( got, exp );
+    // console.log( got );
+
+    /* */
+
+  }
+
+}
+
 // --
 // declare
 // --
@@ -411,6 +479,7 @@ let Self =
     trivialResolve,
     qualifiedResolve,
     globTrivial,
+    optionMissingAction,
 
   }
 
