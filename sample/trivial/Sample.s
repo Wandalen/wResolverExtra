@@ -9,8 +9,8 @@ var src =
   },
   val2 : 'here',
 }
-
-let resolved = _.resolver2.resolve( src, '{::dir/val1} from {::val2}!' );
+debugger;
+let resolved = _.resolverAdv.resolve( src, '{::dir/val1} from {::val2}!' );
 console.log( resolved );
 
 /*
