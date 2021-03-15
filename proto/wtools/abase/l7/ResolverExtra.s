@@ -52,9 +52,6 @@ _.assert( !!_.resolver.Resolver );
 let Prime =
 {
 
-  // ... _.mapExtend( null, _.resolver.Looker.Prime ),
-
-  src : null,
   selector : null,
   defaultResourceKind : null,
   prefixlessAction : 'resolved',
@@ -741,8 +738,8 @@ function errResolving( o )
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
   debugger;
-  /* xxx : tag error */
-  /* xxx : avoid recreation of error */
+  /* xxx0 : tag error */
+  /* xxx0 : avoid recreation of error */
   return it.errMake( 'Failed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
 }
 
@@ -789,7 +786,7 @@ errResolvingThrow.defaults =
 // resolve
 // --
 
-function perform() /* xxx : rename to body? */
+function perform()
 {
   let it = this;
 
@@ -896,27 +893,6 @@ function optionsFromArguments( args )
 
 //
 
-function optionsForm( routine, o )
-{
-  Parent.optionsForm.call( this, routine, o );
-
-  if( o.visited === null )
-  o.visited = [];
-
-  _.assert( o.iteratorProper( o ) );
-  _.assert( o.Resolver === undefined );
-  _.assert( o.resolvingRecursive !== undefined );
-  _.assert( arguments.length === 2 );
-  _.assert( _.longHas( [ 'undefine', 'throw', 'error' ], o.missingAction ), 'Unknown value of option missing action', o.missingAction );
-  _.assert( _.longHas( [ 'default', 'resolved', 'throw', 'error' ], o.prefixlessAction ), 'Unknown value of option prefixless action', o.prefixlessAction );
-  _.assert( _.arrayIs( o.visited ) );
-  _.assert( !o.defaultResourceKind || !_.strHas( o.defaultResourceKind, '*' ), () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( o.defaultResourceKind ) );
-
-  return o;
-}
-
-//
-
 function optionsToIteration( iterator, o )
 {
   let it = Parent.optionsToIteration.call( this, iterator, o );
@@ -930,6 +906,40 @@ function optionsToIteration( iterator, o )
   _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
 
   return it;
+}
+
+//
+
+function iteratorInitEnd( iterator )
+{
+  let looker = this;
+  let result = Parent.iteratorInitEnd.call( this, iterator );
+
+  if( iterator.visited === null )
+  iterator.visited = [];
+
+  _.assert( iterator.iteratorProper( iterator ) );
+  _.assert( iterator.Resolver === undefined );
+  _.assert( iterator.resolvingRecursive !== undefined );
+  _.assert( arguments.length === 1 );
+  _.assert
+  (
+    _.longHas( [ 'undefine', 'throw', 'error' ], iterator.missingAction ),
+    'Unknown value of option missing action', iterator.missingAction  /* qqq : template string in all files */
+  );
+  _.assert
+  (
+    _.longHas( [ 'default', 'resolved', 'throw', 'error' ], iterator.prefixlessAction ),
+    'Unknown value of option prefixless action', iterator.prefixlessAction
+  );
+  _.assert( _.arrayIs( iterator.visited ) );
+  _.assert
+  (
+    !iterator.defaultResourceKind || !_.strHas( iterator.defaultResourceKind, '*' ),
+    () => 'Expects non glob {-defaultResourceKind-}, but got ' + _.strQuote( iterator.defaultResourceKind )
+  );
+
+  return result;
 }
 
 //
@@ -1036,7 +1046,7 @@ _.assert( !!_.resolver.Resolver.Selector );
 let Selector =
 ({
   name : 'ResolverSelectorAdv',
-  parent : _.resolver.Resolver.Selector,
+  // parent : _.resolver.Resolver.Selector,
   prime :
   {
     defaultResourceKind : null,
@@ -1067,7 +1077,7 @@ _.assert( !!_.resolver.Resolver );
 let Replicator =
 ({
   name : 'ResolverAdv',
-  parent : _.resolver.Resolver,
+  // parent : _.resolver.Resolver,
   prime : Prime,
   looker :
   {
@@ -1084,8 +1094,8 @@ let Replicator =
     performBegin,
     performEnd,
     optionsFromArguments,
-    optionsForm,
     optionsToIteration,
+    iteratorInitEnd,
     selectorOptionsForSelectFrom,
 
   },

@@ -390,7 +390,7 @@ function globTrivial( test )
 
 //
 
-function optionMissingAction( test ) /* xxx : write */
+function optionMissingAction( test ) /* xxx0 : write */
 {
 
   /* */
