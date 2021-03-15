@@ -89,9 +89,6 @@ function strRequestParse( srcStr )
     let left, right;
     let splits = _.strSplit( srcStr );
 
-    if( splits.length > 1 )
-    debugger;
-
     for( let s = splits.length - 1 ; s >= 0 ; s-- )
     {
       let split = splits[ s ];
@@ -382,7 +379,6 @@ function _onSelectorReplicate( o )
   }
   else if( rit.prefixlessAction === 'throw' || rit.prefixlessAction === 'error' )
   {
-    debugger;
     it.iterator.continue = false;
     let err = it.errResolving
     ({
@@ -446,7 +442,6 @@ function _onUpBegin()
   if( recursing )
   {
 
-    debugger;
     /* qqq : cover please */
     let o2 = _.mapOnly( it, it.resolve.defaults );
     o2.selector = it.dst;
@@ -495,8 +490,6 @@ function _onQuantitativeFail( err )
 {
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
-
-  debugger;
 
   let result = it.dst;
   if( _.mapIs( result ) )
@@ -660,7 +653,7 @@ function _resourceMapSelect()
   else if( kind === 'f' )
   {
 
-    debugger; /* zzz qqq : cover */
+    /* zzz qqq : cover */
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
@@ -737,7 +730,6 @@ function errResolving( o )
   let rit = it.replicateIteration ? it.replicateIteration : it;
   _.assertRoutineOptions( errResolving, arguments );
   _.assert( arguments.length === 1 );
-  debugger;
   /* xxx0 : tag error */
   /* xxx0 : avoid recreation of error */
   return it.errMake( 'Failed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
@@ -759,8 +751,6 @@ function errResolvingThrow( o )
   _.assert( arguments.length === 1 );
   if( o.missingAction === 'undefine' )
   return;
-
-  debugger;
 
   let err = it.errResolving
   ({

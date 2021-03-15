@@ -407,13 +407,11 @@ function optionMissingAction( test ) /* xxx0 : write */
     k3 : 'Composite {dir::k1} text',
   }
   var exp = '1 + 2 = 3';
-  debugger;
   var got = _.resolverAdv.resolve
   ({
     src,
     selector : '{dir::k1} + {k2::.} = 3',
   });
-  debugger;
   test.identical( got, exp );
 
   /* */
