@@ -99,7 +99,7 @@ function production( test )
   if( isFork )
   version = _.git.path.nativize( remotePath );
   else
-  version = _.npm.versionRemoteRetrive( `npm:///${ mdl.name }!alpha` ) === '' ? 'latest' : 'alpha';
+  version = mdl.version;
 
   if( !version )
   throw _.err( 'Cannot obtain version to install' );
