@@ -390,7 +390,7 @@ function globTrivial( test )
 
 //
 
-function optionMissingAction( test ) /* xxx0 : write */
+function optionMissingAction( test )
 {
 
   /* */
@@ -399,27 +399,22 @@ function optionMissingAction( test ) /* xxx0 : write */
 
   var src =
   {
-    dir :
-    {
-      k1 : '1'
-    },
-    k2 : '2',
-    k3 : 'Composite {dir::k1} text',
+    k1 : '1'
   }
-  var exp = '1 + 2 = 3';
   var got = _.resolverAdv.resolve
   ({
     src,
-    selector : '{dir::k1} + {k2::.} = 3',
+    selector : '{k1::.}',
   });
+  var exp = '1';
   test.identical( got, exp );
 
   /* */
 
   act({ missingAction : 'ignore' });
-  // act({ missingAction : 'undefine' });
-  // act({ missingAction : 'error' });
-  // actThrowing({ missingAction : 'throw' });
+  act({ missingAction : 'undefine' });
+  act({ missingAction : 'error' });
+  act({ missingAction : 'throw' });
 
   /* - */
 
@@ -428,25 +423,56 @@ function optionMissingAction( test ) /* xxx0 : write */
 
     /* */
 
-    test.case = `${_.entity.exportStringSolo( env )}, control`;
+    test.case = `${_.entity.exportStringSolo( env )}, basic`;
+    try
+    {
+      var errorMessage =
+`
+      Failed to resolve {k2::.}
+      Cant select k2::. from {- Map.polluted with 1 elements -}
+      because k2::. does not exist
+      fall at "/"
+`;
 
-    // var src =
-    // {
-    //   dir :
-    //   {
-    //     k1 : '1'
-    //   },
-    //   k2 : '2',
-    //   k3 : 'Composite {dir::k1} text',
-    // }
-    // var exp = 'Hello from here!';
-    // var got = _.resolverAdv.resolve
-    // ({
-    //   src,
-    //   selector : '{dir::k1} + {k2::.} = 3',
-    // });
-    // test.identical( got, exp );
-    // console.log( got );
+      var src =
+      {
+        k1 : '1'
+      }
+      var iterator =
+      {
+        src,
+        selector : '{k2::.}',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( got instanceof _.looker.LookingError );
+        test.identical( got.LookingError, true );
+        test.identical( got.ResolvingError, true );
+        test.equivalent( _.ct.strip( got.originalMessage ), errorMessage );
+      }
+      else
+      {
+        test.identical( got, exp );
+      }
+
+      test.nil( env.missingAction, 'throw' );
+
+    }
+    catch( got )
+    {
+      test.true( _.errIs( got ) );
+      test.identical( env.missingAction, 'throw' );
+      test.true( got instanceof _.looker.LookingError );
+      test.identical( got.LookingError, true );
+      test.identical( got.ResolvingError, true );
+      test.equivalent( _.ct.strip( got.originalMessage ), errorMessage );
+      if( env.missingAction !== 'throw' )
+      throw got;
+    }
 
     /* */
 

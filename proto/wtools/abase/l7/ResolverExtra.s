@@ -55,7 +55,7 @@ let Prime =
   selector : null,
   defaultResourceKind : null,
   prefixlessAction : 'resolved',
-  missingAction : 'throw',
+  // missingAction : 'throw',
   visited : null,
   singleUnwrapping : 1,
   mapValsUnwrapping : 1,
@@ -380,10 +380,10 @@ function _onSelectorReplicate( o )
   else if( rit.prefixlessAction === 'throw' || rit.prefixlessAction === 'error' )
   {
     it.iterator.continue = false;
-    let err = it.errResolving
+    let err = it.errResolvingMake
     ({
       selector,
-      err : _.LookingError( 'Resource selector should have prefix' ),
+      err : _.looker.LookingError( 'Resource selector should have prefix' ),
     });
     if( rit.prefixlessAction === 'throw' )
     throw err;
@@ -721,84 +721,32 @@ function _functionStringsJoinDown()
 }
 
 // --
-// err
-// --
-
-function errResolving( o )
-{
-  let it = this;
-  let rit = it.replicateIteration ? it.replicateIteration : it;
-  _.assertRoutineOptions( errResolving, arguments );
-  _.assert( arguments.length === 1 );
-  /* xxx0 : tag error */
-  /* xxx0 : avoid recreation of error */
-  return it.errMake( 'Failed to resolve', _.ct.format( _.entity.exportStringShort( o.selector ), 'path' ), '\n', o.err );
-}
-
-errResolving.defaults =
-{
-  selector : null,
-  err : null,
-}
-
-//
-
-function errResolvingThrow( o )
-{
-  let it = this;
-
-  _.assertRoutineOptions( errResolvingThrow, arguments );
-  _.assert( arguments.length === 1 );
-  if( o.missingAction === 'undefine' )
-  return;
-
-  let err = it.errResolving
-  ({
-    selector : o.selector,
-    err : o.err,
-  });
-
-  if( o.missingAction === 'throw' )
-  throw err;
-  else
-  return err;
-
-}
-
-errResolvingThrow.defaults =
-{
-  missingAction : null,
-  selector : null,
-  err : null,
-}
-
-// --
 // resolve
 // --
 
-function perform()
-{
-  let it = this;
-
-  it.performBegin();
-
-  try
-  {
-    it.iterate();
-  }
-  catch( err )
-  {
-    throw it.errResolving
-    ({
-      selector : it.selector,
-      err,
-    });
-  }
-
-  it.performEnd();
-
-  return it;
-}
+// function perform()
+// {
+//   let it = this;
+//
+//   it.performBegin();
+//
+//   try
+//   {
+//     it.iterate();
+//   }
+//   catch( err )
+//   {
+//     throw it.errResolvingMake
+//     ({
+//       selector : it.selector,
+//       err,
+//     });
+//   }
+//
+//   it.performEnd();
+//
+//   return it;
+// }
 
 //
 
@@ -840,22 +788,31 @@ function performEnd()
 
   let result = it.result;
 
-  if( result === undefined )
-  {
-    result = it.errResolving
-    ({
-      selector : it.selector,
-      err : _.LookingError( it.selector, 'was not found' ),
-    })
-  }
+  // if( result === undefined )
+  // {
+  //   result = it.errResolvingMake
+  //   ({
+  //     selector : it.selector,
+  //     err : _.looker.LookingError( it.selector, 'was not found' ),
+  //   })
+  // }
 
-  if( _.errIs( result ) )
+  if( result === undefined || _.errIs( result ) )
   {
-    return it.errResolvingThrow
+    return it.errResolvingHandle
     ({
       missingAction : it.missingAction,
       selector : it.selector,
-      err : result,
+      err : () =>
+      {
+        if( _.errIs( result ) )
+        return result;
+        return it.errResolvingMake
+        ({
+          selector : it.selector,
+          err : _.looker.LookingError( it.selector, 'was not found' ),
+        })
+      }
     });
   }
 
@@ -909,18 +866,12 @@ function iteratorInitEnd( iterator )
   iterator.visited = [];
 
   _.assert( iterator.iteratorProper( iterator ) );
-  _.assert( iterator.Resolver === undefined );
-  _.assert( iterator.resolvingRecursive !== undefined );
+  _.assert( iterator.resolvingRecursive >= 0 );
   _.assert( arguments.length === 1 );
   _.assert
   (
-    _.longHas( [ 'undefine', 'throw', 'error' ], iterator.missingAction ),
-    'Unknown value of option missing action', iterator.missingAction  /* qqq : template string in all files */
-  );
-  _.assert
-  (
     _.longHas( [ 'default', 'resolved', 'throw', 'error' ], iterator.prefixlessAction ),
-    'Unknown value of option prefixless action', iterator.prefixlessAction
+    'Unknown value of option prefixless action', iterator.prefixlessAction /* qqq : template string in all files */
   );
   _.assert( _.arrayIs( iterator.visited ) );
   _.assert
@@ -973,7 +924,7 @@ function optionsToIterationOfSelector( iterator, o )
   return it;
 }
 
-// --
+// ---
 // relations
 // --
 
@@ -1022,10 +973,10 @@ let Common =
   _functionStringsJoinUp,
   _functionStringsJoinDown,
 
-  // err
-
-  errResolving,
-  errResolvingThrow,
+  // // err
+  //
+  // errResolvingMake,
+  // errResolvingHandle,
 
 }
 
@@ -1036,7 +987,6 @@ _.assert( !!_.resolver.Resolver.Selector );
 let Selector =
 ({
   name : 'ResolverSelectorAdv',
-  // parent : _.resolver.Resolver.Selector,
   prime :
   {
     defaultResourceKind : null,
@@ -1067,7 +1017,6 @@ _.assert( !!_.resolver.Resolver );
 let Replicator =
 ({
   name : 'ResolverAdv',
-  // parent : _.resolver.Resolver,
   prime : Prime,
   looker :
   {
@@ -1080,7 +1029,7 @@ let Replicator =
     onSelectorReplicate : _onSelectorReplicate,
     onSelectorDown : _onSelectorDown,
 
-    perform,
+    // perform,
     performBegin,
     performEnd,
     optionsFromArguments,
@@ -1111,7 +1060,11 @@ _.assert( ResolverAdv.Selector._onSelectorReplicate === _onSelectorReplicate );
 //
 
 const Self = ResolverAdv;
+
 _.assert( ResolverAdv.IterationPreserve.isFunction !== undefined );
+_.assert( ResolverAdv.Iteration.isFunction === undefined );
+_.assert( ResolverAdv.Iterator.isFunction === undefined );
+_.assert( ResolverAdv.isFunction !== undefined );
 
 let resolveMaybe = _.routine.uniteInheriting( ResolverAdv.exec.head, ResolverAdv.exec.body );
 var defaults = resolveMaybe.defaults;
@@ -1125,12 +1078,9 @@ _.assert( ResolverAdv.exec.defaults.missingAction === 'throw' );
 let ResolverExtension =
 {
 
-  // ... _.resolver,
   name : 'resolverAdv',
-
   resolve : ResolverAdv.exec,
   resolveMaybe,
-
   Looker : ResolverAdv,
   Resolver : ResolverAdv,
 
