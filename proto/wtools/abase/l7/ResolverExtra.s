@@ -409,7 +409,7 @@ function _onSelectorDown()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
 
-  it._arrayFlatten.call( it );
+  it._arrayFlatten();
 
   if( it.continue && _.arrayIs( it.dst ) && it.src.composite === _.resolverAdv.compositeSymbol )
   {
@@ -435,8 +435,8 @@ function _onUpBegin()
   if( !it.dstWritingDown )
   return;
 
-  it._queryParse.call( it );
-  it._resourceMapSelect.call( it );
+  it._queryParse();
+  it._resourceMapSelect();
 
   let recursing = _.strIs( it.dst ) && it._selectorIs( it.dst );
   if( recursing )
@@ -632,7 +632,16 @@ function _queryParse()
   }
 
   it.parsedSelector.full = splits.join( '' );
+
+  let selectorChanged = it.selector !== splits[ 2 ];
   it.selector = it.parsedSelector.name = splits[ 2 ];
+  if( selectorChanged )
+  {
+    it.selectorType = null;
+    it.iterable = null;
+    it.iterationSelectorChanged();
+    it.srcChanged();
+  }
 
 }
 
@@ -657,7 +666,7 @@ function _resourceMapSelect()
     it.isFunction = it.selector;
     if( it.selector === 'strings.join' )
     {
-      it._functionStringsJoinUp.call( it );
+      it._functionStringsJoinUp();
     }
     else _.sure( 0, 'Unknown function', it.parsedSelector.full );
 
@@ -667,10 +676,11 @@ function _resourceMapSelect()
     /* zzz */
     let root = it.root || it;
     it.src = it.iterator.src[ kind ];
-    if( it.selector === '.' )
-    it.src = { '.' : it.src }
-    it.iterable = null;
-    it.srcChanged();
+    // yyy
+    // if( it.selector === '.' )
+    // it.src = { '.' : it.src }
+    // it.iterable = null;
+    // it.srcChanged();
   }
 
 }

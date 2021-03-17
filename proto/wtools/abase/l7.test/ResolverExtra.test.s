@@ -408,8 +408,13 @@ function optionMissingAction( test )
   });
   var exp = '1';
   test.identical( got, exp );
+  var exp =
+  {
+    k1 : '1'
+  }
+  test.identical( src, exp );
 
-  /* */
+  /* xxx */
 
   act({ missingAction : 'ignore' });
   act({ missingAction : 'undefine' });
@@ -431,7 +436,7 @@ function optionMissingAction( test )
       Failed to resolve {k2::.}
       Cant select k2::. from {- Map.polluted with 1 elements -}
       because k2::. does not exist
-      fall at "/"
+      fall at "/."
 `;
 
       var src =
@@ -453,12 +458,12 @@ function optionMissingAction( test )
         test.identical( got.LookingError, true );
         test.identical( got.ResolvingError, true );
         test.equivalent( _.ct.strip( got.originalMessage ), errorMessage );
+        test.true( got === iterator.error );
       }
       else
       {
         test.identical( got, exp );
       }
-
       test.nil( env.missingAction, 'throw' );
 
     }
@@ -470,9 +475,16 @@ function optionMissingAction( test )
       test.identical( got.LookingError, true );
       test.identical( got.ResolvingError, true );
       test.equivalent( _.ct.strip( got.originalMessage ), errorMessage );
+      test.true( got === iterator.error );
       if( env.missingAction !== 'throw' )
       throw got;
     }
+
+    var exp =
+    {
+      k1 : '1'
+    }
+    test.identical( src, exp );
 
     /* */
 
