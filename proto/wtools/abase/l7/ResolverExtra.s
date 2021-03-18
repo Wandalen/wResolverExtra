@@ -45,6 +45,8 @@ let Parent = _.resolver.Resolver;
 _.resolverAdv = _.resolverAdv || Object.create( _.resolver );
 _.assert( !!_.resolver.Resolver );
 
+/* qqq : write nice example for readme */
+
 // --
 // relations
 // --
