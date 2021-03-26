@@ -736,32 +736,6 @@ function _functionStringsJoinDown()
 // resolve
 // --
 
-// function perform()
-// {
-//   let it = this;
-//
-//   it.performBegin();
-//
-//   try
-//   {
-//     it.iterate();
-//   }
-//   catch( err )
-//   {
-//     throw it.errResolvingMake
-//     ({
-//       selector : it.selector,
-//       err,
-//     });
-//   }
-//
-//   it.performEnd();
-//
-//   return it;
-// }
-
-//
-
 function performBegin()
 {
   let it = this;
@@ -799,15 +773,6 @@ function performEnd()
   Parent.performEnd.apply( it, arguments );
 
   let result = it.result;
-
-  // if( result === undefined )
-  // {
-  //   result = it.errResolvingMake
-  //   ({
-  //     selector : it.selector,
-  //     err : _.looker.LookingError( it.selector, 'was not found' ),
-  //   })
-  // }
 
   if( result === undefined || _.errIs( result ) )
   {
@@ -985,11 +950,6 @@ let Common =
   _functionStringsJoinUp,
   _functionStringsJoinDown,
 
-  // // err
-  //
-  // errResolvingMake,
-  // errResolvingHandle,
-
 }
 
 _.assert( !!_.resolver.Resolver.Selector );
@@ -1041,7 +1001,6 @@ let Replicator =
     onSelectorReplicate : _onSelectorReplicate,
     onSelectorDown : _onSelectorDown,
 
-    // perform,
     performBegin,
     performEnd,
     optionsFromArguments,
