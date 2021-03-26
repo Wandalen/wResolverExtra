@@ -39,9 +39,9 @@ if( typeof module !== 'undefined' )
 
 }
 
-let _global = _global_;
-let _ = _global_.wTools;
-let Parent = _.resolver.Resolver;
+const _global = _global_;
+const _ = _global_.wTools;
+const Parent = _.resolver.Resolver;
 _.resolverAdv = _.resolverAdv || Object.create( _.resolver );
 _.assert( !!_.resolver.Resolver );
 
@@ -445,7 +445,7 @@ function _onUpBegin()
   {
 
     /* qqq : cover please */
-    let o2 = _.mapOnly( it, it.resolve.defaults );
+    let o2 = _.mapOnly_( null, it, it.resolve.defaults );
     o2.selector = it.dst;
     o2.src = it.iterator.src;
     it.src = it.resolve( o2 ); /* zzz : write result of selection to dst, never to src? */
