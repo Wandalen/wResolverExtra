@@ -5,7 +5,7 @@
   "author" : "Kostiantyn Wandalen <wanalen@01.school>",
   "license" : "MIT",
   "main" : "proto/wtools/abase/l7/ResolverExtra.s",
-  "files" : [ "proto/wtools/abase/l7", "proto/wtools/Tools.s" ],
+  "files" : [ "proto/wtools/abase/l7", "proto/wtools/Tools.s", "proto/node_modules" ],
   "scripts" : { "test" : "wtest .run 'proto/**' rapidity:-3", "docgen" : "wdocgen proto" },
   "repository" :
   {
@@ -17,6 +17,6 @@
     "url" : "https://github.com/Wandalen/wResolverExtra/issues"
   },
   "dependencies" : { "wTools" : "", "wresolver" : "" },
-  "devDependencies" : { "wresolverextra" : "file:.", "wTesting" : "" },
+  "devDependencies" : { "wTesting" : "" },
   "keywords" : [ "wTools" ]
 }
