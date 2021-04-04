@@ -2,15 +2,12 @@ format: outwillfile-2.0
 root:
   - wResolverExtra.out
 consistency:
-  wResolverExtra.out.will.yml: &ref_0
-    hash: 7b2076084571f093e3fd771897538cb5
-    size: 38466
-  ../.ex.will.yml: &ref_1
+  ../.ex.will.yml: &ref_0
     hash: 840568defc7592c39d3d7886445f9f59
     size: 1905
-  ../.im.will.yml: &ref_2
-    hash: f29c08048580fe4b4ce45d11a01d3efc
-    size: 5018
+  ../.im.will.yml: &ref_1
+    hash: 329c7f9828c1615f704af4160678bdf0
+    size: 5013
 module:
   wResolverExtra.out:
     about:
@@ -23,18 +20,18 @@ module:
         your templates.
       enabled: 1
       version: 0.4.0
-      interpreters:
+      interpreters: &ref_2
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords:
+      keywords: &ref_3
         - wTools
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
+      contributors: &ref_4
         - Kostiantyn Wandalen <wanalen@01.school>
       npm.name: wresolverextra
-      npm.scripts:
+      npm.scripts: &ref_5
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -65,7 +62,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ../
+        path: ..
       repository:
         path: 'git+https:///github.com/Wandalen/wResolverExtra.git'
       origins:
@@ -146,6 +143,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - ../proto/wtools/abase/l7/ResolverExtra.s
+          - ../proto/node_modules/wresolverextra
       exported.dir.proto.export:
         criterion:
           generated: 1
@@ -699,24 +700,6 @@ module:
           content: prime
         inherit:
           - files.transpile
-      exported.proto.export:
-        opts:
-          filePath: 'reflector::exported.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
-      exported.files.proto.export:
-        opts:
-          filePath: 'reflector::exported.files.proto.export'
-        criterion:
-          generated: 1
-          content: proto
-          export: 1
-        inherit:
-          - files.reflect
     build:
       proto.export:
         steps:
@@ -805,9 +788,8 @@ module:
           content: proto
           export: 1
     consistency:
-      wResolverExtra.out.will.yml: *ref_0
-      ../.ex.will.yml: *ref_1
-      ../.im.will.yml: *ref_2
+      ../.ex.will.yml: *ref_0
+      ../.im.will.yml: *ref_1
   ../:
     about:
       name: wResolverExtra
@@ -819,20 +801,13 @@ module:
         your templates.
       enabled: 1
       version: 0.4.0
-      interpreters:
-        - njs >= 10.0.0
-        - chrome >= 60.0.0
-        - firefox >= 60.0.0
-      keywords:
-        - wTools
+      interpreters: *ref_2
+      keywords: *ref_3
       license: MIT
       author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors:
-        - Kostiantyn Wandalen <wanalen@01.school>
+      contributors: *ref_4
       npm.name: wresolverextra
-      npm.scripts:
-        test: wtest .run proto/**
-        docgen: wdocgen .build proto
+      npm.scripts: *ref_5
     path:
       module.willfiles:
         criterion:
@@ -861,7 +836,7 @@ module:
       download:
         criterion:
           predefined: 1
-        path: ./
+        path: .
       repository:
         path: 'git+https:///github.com/Wandalen/wResolverExtra.git'
       origins:
@@ -942,6 +917,10 @@ module:
           raw: compiled
           content: prime
         path: '{path::out.*=}/source/Index.s'
+      npm.proto.entry:
+        path:
+          - proto/wtools/abase/l7/ResolverExtra.s
+          - proto/node_modules/wresolverextra
     submodule:
       wTools:
         path: 'npm:///wTools'
@@ -1498,6 +1477,5 @@ module:
         hash: 840568defc7592c39d3d7886445f9f59
         size: 1905
       ../.im.will.yml:
-        hash: f29c08048580fe4b4ce45d11a01d3efc
-        size: 5018
-      wResolverExtra.out.will.yml: *ref_0
+        hash: 329c7f9828c1615f704af4160678bdf0
+        size: 5013
