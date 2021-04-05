@@ -75,8 +75,8 @@ path:
       raw: compiled
       content: prime
   npm.proto.entry:
-    - /pro/module/wResolverExtra/proto/wtools/abase/l7/ResolverExtra.s
-    - /pro/module/wResolverExtra/proto/node_modules/wresolverextra
+    - proto/wtools/abase/l7/ResolverExtra.s
+    - proto/node_modules/wresolverextra
 reflector:
   reflect.proto:
     inherit: predefined.*
