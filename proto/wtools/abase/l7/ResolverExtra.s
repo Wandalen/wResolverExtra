@@ -32,7 +32,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../wtools/Tools.s' );
+  let _ = require( '../../../node_modules/Tools' );
   _.include( 'wLooker' );
   _.include( 'wSelector' );
   _.include( 'wResolver' );
@@ -472,6 +472,8 @@ function _onDownEnd()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
 
+  _.debugger;
+
   _.assert( !!it.replicateIteration );
 
   if( !it.dstWritingDown )
@@ -528,6 +530,8 @@ function _arrayFlatten()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let currentModule = it.currentModule;
+
+  _.debugger;
 
   if( !rit.arrayFlattening || !_.arrayIs( it.dst ) )
   return;
