@@ -32,7 +32,7 @@
 if( typeof module !== 'undefined' )
 {
 
-  let _ = require( '../../../node_modules/Tools' );
+  const _ = require( '../../../node_modules/Tools' );
   _.include( 'wLooker' );
   _.include( 'wSelector' );
   _.include( 'wResolver' );
@@ -472,8 +472,6 @@ function _onDownEnd()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
 
-  _.debugger;
-
   _.assert( !!it.replicateIteration );
 
   if( !it.dstWritingDown )
@@ -702,7 +700,7 @@ function _functionStringsJoinUp()
 
   _.sure( !!it.down, () => it.parsedSelector.full + ' expects context to join it' );
 
-  it.src = [ it.src ]; /* zzz : write result of selection to dst, never to src? */
+  it.src = [ it.src ];
   it.src[ functionSymbol ] = it.selector;
 
   it.isFunction = it.selector;
