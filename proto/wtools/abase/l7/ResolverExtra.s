@@ -194,7 +194,7 @@ function selectorShortSplit( o )
 {
   let result;
 
-  _.assertRoutineOptions( selectorShortSplit, o );
+  _.routine.assertOptions( selectorShortSplit, o );
   _.assert( arguments.length === 1 );
   _.assert( !_.strHas( o.selector, '/' ) );
   _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.entity.strType( o.selector ) );
@@ -222,7 +222,7 @@ function selectorLongSplit( o )
   if( _.strIs( o ) )
   o = { selector : o }
 
-  _.routineOptions( selectorLongSplit, o );
+  _.routine.options_( selectorLongSplit, o );
   _.assert( arguments.length === 1 );
   _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.entity.strType( o.selector ) );
 
@@ -230,7 +230,7 @@ function selectorLongSplit( o )
 
   selectors.forEach( ( selector ) =>
   {
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.selector = selector;
     result.push( this.selectorShortSplit( o2 ) );
   });
@@ -251,7 +251,7 @@ function selectorParse( o )
   if( _.strIs( o ) )
   o = { selector : o }
 
-  _.routineOptions( selectorParse, o );
+  _.routine.options_( selectorParse, o );
   _.assert( arguments.length === 1 );
   _.sure( _.strIs( o.selector ) || _.strsAreAll( o.selector ), 'Expects string, but got', _.entity.strType( o.selector ) );
 
@@ -276,7 +276,7 @@ function selectorParse( o )
     if( !this.selectorIs( split[ 1 ] ) )
     return split.join( '' );
 
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.selector = split[ 1 ];
     return this.selectorLongSplit( o2 );
   });
@@ -285,7 +285,7 @@ function selectorParse( o )
 
   if( splits.length === 1 && _.strIs( splits[ 0 ] ) && this.selectorIs( splits[ 0 ] ) )
   {
-    let o2 = _.mapExtend( null, o );
+    let o2 = _.props.extend( null, o );
     o2.selector = splits[ 0 ];
     splits[ 0 ] = this.selectorLongSplit( o2 );
   }
@@ -495,7 +495,7 @@ function _onQuantitativeFail( err )
 
   let result = it.dst;
   if( _.mapIs( result ) )
-  result = _.mapVals( result );
+  result = _.props.vals( result );
   if( _.arrayIs( result ) )
   {
     let isString = 1;
@@ -581,7 +581,7 @@ function _mapValsUnwrap()
   if( !_.all( it.dst, ( e ) => _.instanceIs( e ) || _.primitiveIs( e ) ) )
   return;
 
-  it.dst = _.mapVals( it.dst );
+  it.dst = _.props.vals( it.dst );
 }
 
 //
@@ -599,8 +599,8 @@ function _singleUnwrap()
 
   if( _.mapIs( it.dst ) )
   {
-    if( _.mapKeys( it.dst ).length === 1 )
-    it.dst = _.mapVals( it.dst )[ 0 ];
+    if( _.props.keys( it.dst ).length === 1 )
+    it.dst = _.props.vals( it.dst )[ 0 ];
   }
   else if( _.arrayIs( it.dst ) )
   {
@@ -1063,8 +1063,8 @@ let ToolsExtension =
 {
 }
 
-_.mapExtend( _, ToolsExtension );
-_.mapExtend( _.resolverAdv, ResolverExtension );
+_.props.extend( _, ToolsExtension );
+_.props.extend( _.resolverAdv, ResolverExtension );
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _;
