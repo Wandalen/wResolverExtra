@@ -2,12 +2,9 @@ format: outwillfile-2.0
 root:
   - wResolverExtra.out
 consistency:
-  ../.ex.will.yml: &ref_0
-    hash: 840568defc7592c39d3d7886445f9f59
-    size: 1905
-  ../.im.will.yml: &ref_1
-    hash: 86a216d9c0567683d24ff51a82bbbefc
-    size: 4959
+  ../will.yml: &ref_0
+    hash: fec12c7bb385ad08c6c86d5a97fdfe4e
+    size: 6632
 module:
   wResolverExtra.out:
     about:
@@ -20,18 +17,18 @@ module:
         your templates.
       enabled: 1
       version: 0.4.0
-      interpreters: &ref_2
+      license: MIT
+      npm.name: wresolverextra
+      author: Kostiantyn Wandalen <wanalen@01.school>
+      keywords: &ref_1
+        - wTools
+      contributors: &ref_2
+        - Kostiantyn Wandalen <wanalen@01.school>
+      interpreters: &ref_3
         - njs >= 10.0.0
         - chrome >= 60.0.0
         - firefox >= 60.0.0
-      keywords: &ref_3
-        - wTools
-      license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: &ref_4
-        - Kostiantyn Wandalen <wanalen@01.school>
-      npm.name: wresolverextra
-      npm.scripts: &ref_5
+      npm.scripts: &ref_4
         test: wtest .run proto/**
         docgen: wdocgen .build proto
     path:
@@ -46,15 +43,11 @@ module:
       module.original.willfiles:
         criterion:
           predefined: 1
-        path:
-          - ../.ex.will.yml
-          - ../.im.will.yml
+        path: ../will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
-        path:
-          - ../.ex.will.yml
-          - ../.im.will.yml
+        path: ../will.yml
       module.peer.in:
         criterion:
           predefined: 1
@@ -788,8 +781,7 @@ module:
           content: proto
           export: 1
     consistency:
-      ../.ex.will.yml: *ref_0
-      ../.im.will.yml: *ref_1
+      ../will.yml: *ref_0
   ../:
     about:
       name: wResolverExtra
@@ -801,26 +793,22 @@ module:
         your templates.
       enabled: 1
       version: 0.4.0
-      interpreters: *ref_2
-      keywords: *ref_3
       license: MIT
-      author: Kostiantyn Wandalen <wanalen@01.school>
-      contributors: *ref_4
       npm.name: wresolverextra
-      npm.scripts: *ref_5
+      author: Kostiantyn Wandalen <wanalen@01.school>
+      keywords: *ref_1
+      contributors: *ref_2
+      interpreters: *ref_3
+      npm.scripts: *ref_4
     path:
       module.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: will.yml
       module.original.willfiles:
         criterion:
           predefined: 1
-        path:
-          - .ex.will.yml
-          - .im.will.yml
+        path: will.yml
       module.peer.willfiles:
         criterion:
           predefined: 1
@@ -1473,9 +1461,6 @@ module:
           - 'build::release'
           - 'build::npm'
     consistency:
-      ../.ex.will.yml:
-        hash: 840568defc7592c39d3d7886445f9f59
-        size: 1905
-      ../.im.will.yml:
-        hash: 86a216d9c0567683d24ff51a82bbbefc
-        size: 4959
+      ../will.yml:
+        hash: fec12c7bb385ad08c6c86d5a97fdfe4e
+        size: 6632
