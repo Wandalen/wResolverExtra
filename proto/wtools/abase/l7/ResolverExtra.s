@@ -549,7 +549,7 @@ function _arrayWrap( result )
   return;
 
   if( !_.mapIs( it.dst ) )
-  it.dst = _.arrayAs( it.dst );
+  it.dst = _.array.as( it.dst );
 
 }
 
