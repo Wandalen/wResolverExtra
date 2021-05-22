@@ -437,6 +437,8 @@ function _onUpBegin()
   if( !it.dstWritingDown )
   return;
 
+  _.debugger;
+
   it._queryParse();
   it._resourceMapSelect();
 
@@ -528,8 +530,6 @@ function _arrayFlatten()
   let it = this;
   let rit = it.replicateIteration ? it.replicateIteration : it;
   let currentModule = it.currentModule;
-
-  _.debugger;
 
   if( !rit.arrayFlattening || !_.arrayIs( it.dst ) )
   return;
@@ -679,12 +679,28 @@ function _resourceMapSelect()
   {
     /* zzz */
     let root = it.root || it;
-    it.src = it.iterator.src[ kind ];
+
+    let k, c;
+    [ it.src, k, c, it.exists ] = it.elementGet( it.iterator.src, kind, null );
+
+    // it.src = it.iterator.src[ kind ];
+    // it.exists = _.props.has( it.iterator.src, kind );
     // yyy
     // if( it.selector === '.' )
     // it.src = { '.' : it.src }
-    // it.iterable = null;
-    // it.srcChanged();
+    // debugger;
+    if( !it.exists )
+    {
+      it.errHandle( () => it.errDoesNotExist() );
+      // it.errHandle
+      // ({
+      //   missingAction : it.missingAction,
+      //   selector : it.selector,
+      // });
+    }
+
+    it.iterable = null;
+    it.srcChanged();
   }
 
 }
@@ -774,26 +790,26 @@ function performEnd()
 
   Parent.performEnd.apply( it, arguments );
 
-  let result = it.result;
-
-  if( result === undefined || _.errIs( result ) )
-  {
-    return it.errResolvingHandle
-    ({
-      missingAction : it.missingAction,
-      selector : it.selector,
-      err : () =>
-      {
-        if( _.errIs( result ) )
-        return result;
-        return it.errResolvingMake
-        ({
-          selector : it.selector,
-          err : _.looker.LookingError( it.selector, 'was not found' ),
-        })
-      }
-    });
-  }
+  // debugger;
+  // let result = it.result;
+  // if( result === undefined || _.errIs( result ) )
+  // {
+  //   return it.errResolvingHandle
+  //   ({
+  //     missingAction : it.missingAction,
+  //     selector : it.selector,
+  //     err : () =>
+  //     {
+  //       if( _.errIs( result ) )
+  //       return result;
+  //       return it.errResolvingMake
+  //       ({
+  //         selector : it.selector,
+  //         err : _.looker.LookingError( it.selector, 'was not found' ),
+  //       })
+  //     }
+  //   });
+  // }
 
   return it;
 }

@@ -414,7 +414,7 @@ function optionMissingAction( test )
   }
   test.identical( src, exp );
 
-  /* xxx */
+  /* */
 
   act({ missingAction : 'ignore' });
   act({ missingAction : 'undefine' });
@@ -433,10 +433,10 @@ function optionMissingAction( test )
     {
       var errorMessage =
 `
-      Failed to resolve {k2::.}
-      Cant select k2::. from {- Map.polluted with 1 elements -}
-      because k2::. does not exist
-      fall at "/."
+Failed to resolve {k2::.}
+Cant select k2::. from {- Map.polluted with 1 elements -}
+because k2::. does not exist
+fall at "/"
 `;
 
       var src =
@@ -449,7 +449,10 @@ function optionMissingAction( test )
         selector : '{k2::.}',
         missingAction : env.missingAction,
       }
+      _.debugger = 1;
+      debugger;
       var got = _.resolverAdv.resolve( iterator );
+      debugger;
       var exp = undefined;
       if( env.missingAction === 'error' )
       {
@@ -492,6 +495,333 @@ function optionMissingAction( test )
 
 }
 
+//
+
+function resolveUndefined( test )
+{
+
+  act({ missingAction : 'ignore' });
+  act({ missingAction : 'undefine' });
+  act({ missingAction : 'error' });
+  act({ missingAction : 'throw' });
+
+  /* - */
+
+  function act( env )
+  {
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, map, key, undefined`;
+    var src =
+    {
+      k1 : undefined,
+    }
+    var iterator =
+    {
+      src,
+      selector : 'k1::.',
+      missingAction : env.missingAction,
+    }
+    var got = _.resolverAdv.resolve( iterator );
+    var exp = undefined;
+    test.identical( got, exp );
+    test.identical( iterator.error, null );
+
+    /* */
+
+    if( env.missingAction !== 'throw' )
+    {
+      test.case = `${_.entity.exportStringSolo( env )}, map, key, nothing`;
+      var src =
+      {
+        k1 : undefined,
+      }
+      var iterator =
+      {
+        src,
+        selector : 'k2::.',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( _.errIs( iterator.error ) );
+        var exp =
+`
+Failed to resolve k2::.
+Cant select k2::. from {- Map.polluted with 1 elements -}
+because k2::. does not exist
+fall at "/"
+`
+        test.equivalent( _.ct.strip( iterator.error.originalMessage ), exp );
+      }
+      else
+      {
+        test.identical( got, exp );
+        test.identical( iterator.error, true );
+      }
+    }
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, map, cardinal`;
+    var src =
+    {
+      k1 : undefined,
+    }
+    var iterator =
+    {
+      src,
+      selector : '#0::.',
+      missingAction : env.missingAction,
+    }
+    var got = _.resolverAdv.resolve( iterator );
+    var exp = undefined;
+    test.identical( got, exp );
+    test.identical( iterator.error, null );
+
+    /* */
+
+    if( env.missingAction !== 'throw' )
+    {
+      test.case = `${_.entity.exportStringSolo( env )}, map, cardinal, nothing`;
+      var src =
+      {
+        k1 : undefined,
+      }
+      var iterator =
+      {
+        src,
+        selector : '#1::.',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( _.errIs( iterator.error ) );
+        var exp =
+`
+Failed to resolve #1::.
+Cant select #1::. from {- Map.polluted with 1 elements -}
+because #1::. does not exist
+fall at "/"
+`
+        test.equivalent( _.ct.strip( iterator.error.originalMessage ), exp );
+      }
+      else
+      {
+        test.identical( got, exp );
+        test.identical( iterator.error, true );
+      }
+    }
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, long, cardinal, undefined`;
+    var src = [ undefined ];
+    var iterator =
+    {
+      src,
+      selector : '#0::.',
+      missingAction : env.missingAction,
+    }
+    var got = _.resolverAdv.resolve( iterator );
+    var exp = undefined;
+    test.identical( got, exp );
+    test.identical( iterator.error, null );
+
+    /* */
+
+    if( env.missingAction !== 'throw' )
+    {
+      test.case = `${_.entity.exportStringSolo( env )}, long, cardinal, nothing`;
+      var src = [ undefined ];
+      var iterator =
+      {
+        src,
+        selector : '#1::.',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( _.errIs( iterator.error ) );
+        var exp =
+`
+Failed to resolve #1::.
+Cant select #1::. from {- Array with 1 elements -}
+because #1::. does not exist
+fall at "/"
+`
+        test.equivalent( _.ct.strip( iterator.error.originalMessage ), exp );
+      }
+      else
+      {
+        test.identical( got, exp );
+        test.identical( iterator.error, true );
+      }
+    }
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, set, cardinal, undefined`;
+    var src = new Set([ undefined ]);
+    var iterator =
+    {
+      src,
+      selector : '#0::.',
+      missingAction : env.missingAction,
+    }
+    var got = _.resolverAdv.resolve( iterator );
+    var exp = undefined;
+    test.identical( got, exp );
+    test.identical( iterator.error, null );
+
+    /* */
+
+    if( env.missingAction !== 'throw' )
+    {
+      test.case = `${_.entity.exportStringSolo( env )}, set, cardinal, nothing`;
+      var src = new Set([ undefined ]);
+      var iterator =
+      {
+        src,
+        selector : '#1::.',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( _.errIs( iterator.error ) );
+        var exp =
+`
+Failed to resolve #1::.
+Cant select #1::. from {- Set with 1 elements -}
+because #1::. does not exist
+fall at "/"
+`
+        test.equivalent( _.ct.strip( iterator.error.originalMessage ), exp );
+      }
+      else
+      {
+        test.identical( got, exp );
+        test.identical( iterator.error, true );
+      }
+    }
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, hash, key, undefined`;
+    var src = new HashMap([ [ 'k1', undefined ] ]);
+    var iterator =
+    {
+      src,
+      selector : 'k1::.',
+      missingAction : env.missingAction,
+    }
+    var got = _.resolverAdv.resolve( iterator );
+    var exp = undefined;
+    test.identical( got, exp );
+    test.identical( iterator.error, null );
+
+    /* */
+
+    if( env.missingAction !== 'throw' )
+    {
+      test.case = `${_.entity.exportStringSolo( env )}, hash, key, nothing`;
+      var src = new HashMap([ [ 'k1', undefined ] ]);
+      var iterator =
+      {
+        src,
+        selector : 'k2::.',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( _.errIs( iterator.error ) );
+        var exp =
+`
+Failed to resolve k2::.
+Cant select k2::. from {- HashMap with 1 elements -}
+because k2::. does not exist
+fall at "/"
+`
+        test.equivalent( _.ct.strip( iterator.error.originalMessage ), exp );
+      }
+      else
+      {
+        test.identical( got, exp );
+        test.identical( iterator.error, true );
+      }
+    }
+
+    /* */
+
+    test.case = `${_.entity.exportStringSolo( env )}, hash, cardinal`;
+    var src = new HashMap([ [ 'k1', undefined ] ]);
+    var iterator =
+    {
+      src,
+      selector : '#0::.',
+      missingAction : env.missingAction,
+    }
+    var got = _.resolverAdv.resolve( iterator );
+    var exp = undefined;
+    test.identical( got, exp );
+    test.identical( iterator.error, null );
+
+    /* */
+
+    if( env.missingAction !== 'throw' )
+    {
+      test.case = `${_.entity.exportStringSolo( env )}, hash, cardinal, nothing`;
+      var src = new HashMap([ [ 'k1', undefined ] ]);
+      var iterator =
+      {
+        src,
+        selector : '#1::.',
+        missingAction : env.missingAction,
+      }
+      var got = _.resolverAdv.resolve( iterator );
+      var exp = undefined;
+      if( env.missingAction === 'error' )
+      {
+        test.true( _.errIs( got ) );
+        test.true( _.errIs( iterator.error ) );
+        var exp =
+`
+Failed to resolve #1::.
+Cant select #1::. from {- HashMap with 1 elements -}
+because #1::. does not exist
+fall at "/"
+`
+        test.equivalent( _.ct.strip( iterator.error.originalMessage ), exp );
+      }
+      else
+      {
+        test.identical( got, exp );
+        test.identical( iterator.error, true );
+      }
+    }
+
+    /* */
+
+  }
+
+}
+
 // --
 // declare
 // --
@@ -516,6 +846,7 @@ const Proto =
     qualifiedResolve,
     globTrivial,
     optionMissingAction,
+    resolveUndefined,
 
   }
 
