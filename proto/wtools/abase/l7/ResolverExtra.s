@@ -1051,9 +1051,11 @@ _.assert( ResolverAdv.Selector._onSelectorReplicate === _onSelectorReplicate );
 const Self = ResolverAdv;
 
 _.assert( ResolverAdv.IterationPreserve.isFunction !== undefined );
-_.assert( ResolverAdv.Iteration.isFunction === undefined );
+_.assert( ResolverAdv.Iteration.isFunction !== undefined );
+// _.assert( ResolverAdv.Iteration.isFunction === undefined );
 _.assert( ResolverAdv.Iterator.isFunction === undefined );
-_.assert( ResolverAdv.isFunction !== undefined );
+// _.assert( ResolverAdv.isFunction !== undefined );
+_.assert( ResolverAdv.isFunction === undefined );
 
 let resolveMaybe = _.routine.uniteInheriting( ResolverAdv.exec.head, ResolverAdv.exec.body );
 var defaults = resolveMaybe.defaults;
