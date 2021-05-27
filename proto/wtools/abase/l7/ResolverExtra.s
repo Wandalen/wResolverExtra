@@ -385,7 +385,7 @@ function _onSelectorReplicate( o )
     let err = it.errResolvingMake
     ({
       selector,
-      err : _.looker.LookingError( 'Resource selector should have prefix' ),
+      err : _.looker.SeekingError( 'Resource selector should have prefix' ),
     });
     if( rit.prefixlessAction === 'throw' )
     throw err;
@@ -766,12 +766,12 @@ function performBegin()
   _.assert( _.arrayIs( it.visited ) );
   _.assert( it.resolveExtraOptions === undefined );
 
-  _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
-  _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
-  _.assert( it.onUpBegin === it.Looker._onUpBegin );
-  _.assert( it.onUpEnd === it.Looker._onUpEnd );
-  _.assert( it.onDownEnd === it.Looker._onDownEnd );
-  _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
+  _.assert( it.onSelectorReplicate === it.Seeker._onSelectorReplicate );
+  _.assert( it.onSelectorDown === it.Seeker._onSelectorDown );
+  _.assert( it.onUpBegin === it.Seeker._onUpBegin );
+  _.assert( it.onUpEnd === it.Seeker._onUpEnd );
+  _.assert( it.onDownEnd === it.Seeker._onDownEnd );
+  _.assert( it.onQuantitativeFail === it.Seeker._onQuantitativeFail );
 
   return it;
 }
@@ -805,7 +805,7 @@ function performEnd()
   //       return it.errResolvingMake
   //       ({
   //         selector : it.selector,
-  //         err : _.looker.LookingError( it.selector, 'was not found' ),
+  //         err : _.looker.SeekingError( it.selector, 'was not found' ),
   //       })
   //     }
   //   });
@@ -840,12 +840,12 @@ function optionsToIteration( iterator, o )
   let it = Parent.optionsToIteration.call( this, iterator, o );
 
   _.assert( arguments.length === 2 );
-  _.assert( it.onSelectorReplicate === it.Looker._onSelectorReplicate );
-  _.assert( it.onSelectorDown === it.Looker._onSelectorDown );
-  _.assert( it.onUpBegin === it.Looker._onUpBegin );
-  _.assert( it.onUpEnd === it.Looker._onUpEnd );
-  _.assert( it.onDownEnd === it.Looker._onDownEnd );
-  _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
+  _.assert( it.onSelectorReplicate === it.Seeker._onSelectorReplicate );
+  _.assert( it.onSelectorDown === it.Seeker._onSelectorDown );
+  _.assert( it.onUpBegin === it.Seeker._onUpBegin );
+  _.assert( it.onUpEnd === it.Seeker._onUpEnd );
+  _.assert( it.onDownEnd === it.Seeker._onDownEnd );
+  _.assert( it.onQuantitativeFail === it.Seeker._onQuantitativeFail );
 
   return it;
 }
@@ -911,10 +911,10 @@ function optionsToIterationOfSelector( iterator, o )
 
   _.assert( it.onSelectorReplicate === undefined );
   _.assert( it.onSelectorDown === undefined );
-  _.assert( it.onUpBegin === it.Looker._onUpBegin );
-  _.assert( it.onUpEnd === it.Looker._onUpEnd );
-  _.assert( it.onDownEnd === it.Looker._onDownEnd );
-  _.assert( it.onQuantitativeFail === it.Looker._onQuantitativeFail );
+  _.assert( it.onUpBegin === it.Seeker._onUpBegin );
+  _.assert( it.onUpEnd === it.Seeker._onUpEnd );
+  _.assert( it.onDownEnd === it.Seeker._onDownEnd );
+  _.assert( it.onQuantitativeFail === it.Seeker._onQuantitativeFail );
 
   return it;
 }
@@ -988,7 +988,7 @@ let Selector =
     arrayFlattening : null,
     Resolver : null,
   },
-  looker :
+  seeker :
   {
     ... Common,
 
@@ -1008,7 +1008,7 @@ let Replicator =
 ({
   name : 'ResolverAdv',
   prime : Prime,
-  looker :
+  seeker :
   {
 
     ... Common,
@@ -1057,7 +1057,7 @@ _.assert( ResolverAdv.isFunction !== undefined );
 
 let resolveMaybe = _.routine.uniteInheriting( ResolverAdv.exec.head, ResolverAdv.exec.body );
 var defaults = resolveMaybe.defaults;
-defaults.Looker = defaults;
+defaults.Seeker = defaults;
 defaults.missingAction = 'undefine';
 _.assert( ResolverAdv.exec.body.defaults.missingAction === 'throw' );
 _.assert( ResolverAdv.exec.defaults.missingAction === 'throw' );
@@ -1070,7 +1070,7 @@ let ResolverExtension =
   name : 'resolverAdv',
   resolve : ResolverAdv.exec,
   resolveMaybe,
-  Looker : ResolverAdv,
+  Seeker : ResolverAdv,
   Resolver : ResolverAdv,
 
 }

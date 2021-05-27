@@ -26,7 +26,7 @@ function selectorParse( test )
 {
   let self = this;
   // let r = _.resolverAdv;
-  let r = _.resolverAdv.Looker;
+  let r = _.resolverAdv.Seeker;
 
   test.case = 'single inline, single split';
   var expected = [ [ [ 'a', '::', 'b' ] ] ]
@@ -136,7 +136,7 @@ function selectorNormalize( test )
 {
   let self = this;
   // let r = _.resolverAdv;
-  let r = _.resolverAdv.Looker;
+  let r = _.resolverAdv.Seeker;
 
   test.case = 'single inline, single split';
   var expected = '{a::b}';
@@ -457,8 +457,8 @@ fall at "/"
       if( env.missingAction === 'error' )
       {
         test.true( _.errIs( got ) );
-        test.true( got instanceof _.looker.LookingError );
-        test.identical( got.LookingError, true );
+        test.true( got instanceof _.looker.SeekingError );
+        test.identical( got.SeekingError, true );
         test.identical( got.ResolvingError, true );
         test.equivalent( _.ct.strip( got.originalMessage ), errorMessage );
         test.true( got === iterator.error );
@@ -474,8 +474,8 @@ fall at "/"
     {
       test.true( _.errIs( got ) );
       test.identical( env.missingAction, 'throw' );
-      test.true( got instanceof _.looker.LookingError );
-      test.identical( got.LookingError, true );
+      test.true( got instanceof _.looker.SeekingError );
+      test.identical( got.SeekingError, true );
       test.identical( got.ResolvingError, true );
       test.equivalent( _.ct.strip( got.originalMessage ), errorMessage );
       test.true( got === iterator.error );
