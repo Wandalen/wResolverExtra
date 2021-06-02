@@ -1082,7 +1082,7 @@ let ToolsExtension =
 }
 
 _.props.extend( _, ToolsExtension );
-_.props.extend( _.resolverAdv, ResolverExtension );
+/* _.props.extend */Object.assign( _.resolverAdv, ResolverExtension );
 
 if( typeof module !== 'undefined' )
 module[ 'exports' ] = _;
