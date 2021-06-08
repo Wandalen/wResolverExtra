@@ -450,9 +450,7 @@ fall at "/"
         missingAction : env.missingAction,
       }
       _.debugger = 1;
-      debugger;
       var got = _.resolverAdv.resolve( iterator );
-      debugger;
       var exp = undefined;
       if( env.missingAction === 'error' )
       {
