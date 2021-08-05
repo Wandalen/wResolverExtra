@@ -1,6 +1,6 @@
 {
   "name": "wresolverextra",
-  "version": "0.3.196",
+  "version": "0.3.197",
   "description": "Collection of cross-platform routines to resolve complex data structures. It takes a complex data structure, traverses it and resolves all strings having inlined special substrings. Use the module to resolve your templates.",
   "author": "Kostiantyn Wandalen <wanalen@01.school>",
   "license": "MIT",
@@ -23,11 +23,11 @@
     "url": "https://github.com/Wandalen/wResolverExtra/issues"
   },
   "dependencies": {
-    "wTools": "latest",
-    "wresolver": "latest"
+    "wTools": "delta",
+    "wresolver": "delta"
   },
   "devDependencies": {
-    "wTesting": "latest",
+    "wTesting": "delta",
     "eslint": "7.1.0"
   },
   "keywords": [
