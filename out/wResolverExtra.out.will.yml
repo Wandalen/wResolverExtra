@@ -3,8 +3,8 @@ root:
   - wResolverExtra.out
 consistency:
   ../will.yml: &ref_0
-    hash: a37c6e9fc1678902ab893b58f4877933
-    size: 6725
+    hash: ba20042e09efa38bc4f2c4d71ef332fa
+    size: 6584
 module:
   wResolverExtra.out:
     about:
@@ -373,9 +373,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -711,12 +708,6 @@ module:
           - 'step::doc.export'
         criterion:
           content: doc
-          export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
           export: 1
       export:
         steps:
@@ -1072,9 +1063,6 @@ module:
           content: npm
         inherit:
           - module.export
-      npm.publish:
-        opts:
-          shell: npm publish
       npm.generate.debug.raw:
         opts:
           entryPath: 'path::entry.out.*=1'
@@ -1411,12 +1399,6 @@ module:
         criterion:
           content: doc
           export: 1
-      npm.export:
-        steps:
-          - 'step::npm.publish'
-        criterion:
-          content: npm
-          export: 1
       export:
         steps:
           - 'build::proto.export'
@@ -1474,5 +1456,5 @@ module:
           - 'build::npm'
     consistency:
       ../will.yml:
-        hash: a37c6e9fc1678902ab893b58f4877933
-        size: 6725
+        hash: ba20042e09efa38bc4f2c4d71ef332fa
+        size: 6584
